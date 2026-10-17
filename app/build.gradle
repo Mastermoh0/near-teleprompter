@@ -1,0 +1,71 @@
+plugins { id 'com.android.application' }
+
+// Private local signing config or GitHub Actions secrets; never committed.
+def releaseSigningProperties = new Properties()
+def releaseSigningFile = rootProject.file('.signing/release.properties')
+if (releaseSigningFile.exists()) {
+    releaseSigningFile.withInputStream { releaseSigningProperties.load(it) }
+}
+def releaseSigningValues = [
+    storeFile: System.getenv('NEAR_SIGNING_STORE_FILE') ?: releaseSigningProperties.getProperty('storeFile'),
+    storePassword: System.getenv('NEAR_SIGNING_STORE_PASSWORD') ?: releaseSigningProperties.getProperty('storePassword'),
+    keyAlias: System.getenv('NEAR_SIGNING_KEY_ALIAS') ?: releaseSigningProperties.getProperty('keyAlias'),
+    keyPassword: System.getenv('NEAR_SIGNING_KEY_PASSWORD') ?: releaseSigningProperties.getProperty('keyPassword')
+]
+def releaseSigningReady = releaseSigningValues.values().every { it != null && !it.isEmpty() }
+
+android {
+    namespace 'com.mastermoh.near'
+    compileSdk 36
+    defaultConfig {
+        applicationId 'com.mastermoh.near'
+        minSdk 26
+        targetSdk 36
+        versionCode 1
+        versionName '1.0.0'
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    signingConfigs {
+        if (releaseSigningReady) {
+            release {
+                storeFile rootProject.file(releaseSigningValues.storeFile)
+                storePassword releaseSigningValues.storePassword
+                keyAlias releaseSigningValues.keyAlias
+                keyPassword releaseSigningValues.keyPassword
+                storeType 'PKCS12'
+            }
+        }
+    }
+    buildTypes {
+        release {
+            debuggable false
+            minifyEnabled false
+            if (releaseSigningReady) signingConfig signingConfigs.release
+        }
+    }
+    lint { abortOnError true }
+}
+
+def verifyReleaseSigning = tasks.register('verifyReleaseSigning') {
+    doLast {
+        if (!releaseSigningReady) {
+            throw new GradleException('Release signing is missing. Run scripts/release.ps1 or configure the four NEAR_SIGNING_* variables documented in docs/RELEASING.md.')
+        }
+    }
+}
+tasks.matching { it.name == 'preReleaseBuild' }.configureEach {
+    dependsOn verifyReleaseSigning
+}
+
+dependencies {
+    implementation 'com.google.android.material:material:1.13.0'
+    implementation 'androidx.appcompat:appcompat:1.7.1'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test:runner:1.6.2'
+    androidTestImplementation 'androidx.test:rules:1.6.1'
+    androidTestImplementation 'androidx.test.ext:junit:1.2.1'
+}

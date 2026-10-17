@@ -1,0 +1,623 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-17T12:49:56.612Z",
+  "title": "Design System: Near · Teleprompter",
+  "extensions": {
+    "platform": {
+      "name": "android",
+      "implementation": "Java 17 / Android views / Material Components 1.13.0",
+      "theme": "Theme.Material3.DayNight.NoActionBar",
+      "sourceRoot": "app/src/main",
+      "frontmatterUnits": {
+        "dp": "Android density-independent geometry",
+        "sp": "Android scaled text size"
+      },
+      "componentPreview": "Illustrative self-contained HTML/CSS translations only. One CSS px represents one dp for the design panel; these are not production app components, native screenshots, or browser verification."
+    },
+    "colorMeta": {
+      "light-primary": {
+        "role": "primary",
+        "displayName": "Forest action",
+        "tonalRamp": [
+          "oklch(15% 0.0835 155.5)",
+          "oklch(27% 0.0835 155.5)",
+          "oklch(39% 0.0835 155.5)",
+          "oklch(51% 0.0835 155.5)",
+          "oklch(63% 0.0835 155.5)",
+          "oklch(75% 0.0835 155.5)",
+          "oklch(87% 0.0835 155.5)",
+          "oklch(95% 0.0835 155.5)"
+        ]
+      },
+      "light-on-primary": {
+        "role": "primary",
+        "displayName": "White action foreground",
+        "tonalRamp": [
+          "oklch(15% 0.0000 89.9)",
+          "oklch(27% 0.0000 89.9)",
+          "oklch(39% 0.0000 89.9)",
+          "oklch(51% 0.0000 89.9)",
+          "oklch(63% 0.0000 89.9)",
+          "oklch(75% 0.0000 89.9)",
+          "oklch(87% 0.0000 89.9)",
+          "oklch(95% 0.0000 89.9)"
+        ]
+      },
+      "light-container": {
+        "role": "primary",
+        "displayName": "Pale green selection",
+        "tonalRamp": [
+          "oklch(15% 0.0316 154.1)",
+          "oklch(27% 0.0316 154.1)",
+          "oklch(39% 0.0316 154.1)",
+          "oklch(51% 0.0316 154.1)",
+          "oklch(63% 0.0316 154.1)",
+          "oklch(75% 0.0316 154.1)",
+          "oklch(87% 0.0316 154.1)",
+          "oklch(95% 0.0316 154.1)"
+        ]
+      },
+      "light-on-container": {
+        "role": "primary",
+        "displayName": "Deep green selection ink",
+        "tonalRamp": [
+          "oklch(15% 0.0468 154.9)",
+          "oklch(27% 0.0468 154.9)",
+          "oklch(39% 0.0468 154.9)",
+          "oklch(51% 0.0468 154.9)",
+          "oklch(63% 0.0468 154.9)",
+          "oklch(75% 0.0468 154.9)",
+          "oklch(87% 0.0468 154.9)",
+          "oklch(95% 0.0468 154.9)"
+        ]
+      },
+      "light-surface": {
+        "role": "neutral",
+        "displayName": "Warm workbench",
+        "tonalRamp": [
+          "oklch(15% 0.0080 114.2)",
+          "oklch(27% 0.0080 114.2)",
+          "oklch(39% 0.0080 114.2)",
+          "oklch(51% 0.0080 114.2)",
+          "oklch(63% 0.0080 114.2)",
+          "oklch(75% 0.0080 114.2)",
+          "oklch(87% 0.0080 114.2)",
+          "oklch(95% 0.0080 114.2)"
+        ]
+      },
+      "light-surface-variant": {
+        "role": "neutral",
+        "displayName": "Soft tonal surface",
+        "tonalRamp": [
+          "oklch(15% 0.0124 121.7)",
+          "oklch(27% 0.0124 121.7)",
+          "oklch(39% 0.0124 121.7)",
+          "oklch(51% 0.0124 121.7)",
+          "oklch(63% 0.0124 121.7)",
+          "oklch(75% 0.0124 121.7)",
+          "oklch(87% 0.0124 121.7)",
+          "oklch(95% 0.0124 121.7)"
+        ]
+      },
+      "light-on-surface": {
+        "role": "neutral",
+        "displayName": "Forest ink",
+        "tonalRamp": [
+          "oklch(15% 0.0143 145.1)",
+          "oklch(27% 0.0143 145.1)",
+          "oklch(39% 0.0143 145.1)",
+          "oklch(51% 0.0143 145.1)",
+          "oklch(63% 0.0143 145.1)",
+          "oklch(75% 0.0143 145.1)",
+          "oklch(87% 0.0143 145.1)",
+          "oklch(95% 0.0143 145.1)"
+        ]
+      },
+      "light-secondary": {
+        "role": "neutral",
+        "displayName": "Muted forest ink",
+        "tonalRamp": [
+          "oklch(15% 0.0239 149.7)",
+          "oklch(27% 0.0239 149.7)",
+          "oklch(39% 0.0239 149.7)",
+          "oklch(51% 0.0239 149.7)",
+          "oklch(63% 0.0239 149.7)",
+          "oklch(75% 0.0239 149.7)",
+          "oklch(87% 0.0239 149.7)",
+          "oklch(95% 0.0239 149.7)"
+        ]
+      },
+      "light-outline": {
+        "role": "neutral",
+        "displayName": "Sage boundary",
+        "tonalRamp": [
+          "oklch(15% 0.0212 145.3)",
+          "oklch(27% 0.0212 145.3)",
+          "oklch(39% 0.0212 145.3)",
+          "oklch(51% 0.0212 145.3)",
+          "oklch(63% 0.0212 145.3)",
+          "oklch(75% 0.0212 145.3)",
+          "oklch(87% 0.0212 145.3)",
+          "oklch(95% 0.0212 145.3)"
+        ]
+      },
+      "dark-primary": {
+        "role": "primary",
+        "displayName": "Light forest action",
+        "tonalRamp": [
+          "oklch(15% 0.0755 154.0)",
+          "oklch(27% 0.0755 154.0)",
+          "oklch(39% 0.0755 154.0)",
+          "oklch(51% 0.0755 154.0)",
+          "oklch(63% 0.0755 154.0)",
+          "oklch(75% 0.0755 154.0)",
+          "oklch(87% 0.0755 154.0)",
+          "oklch(95% 0.0755 154.0)"
+        ]
+      },
+      "dark-on-primary": {
+        "role": "primary",
+        "displayName": "Deep action foreground",
+        "tonalRamp": [
+          "oklch(15% 0.0678 155.6)",
+          "oklch(27% 0.0678 155.6)",
+          "oklch(39% 0.0678 155.6)",
+          "oklch(51% 0.0678 155.6)",
+          "oklch(63% 0.0678 155.6)",
+          "oklch(75% 0.0678 155.6)",
+          "oklch(87% 0.0678 155.6)",
+          "oklch(95% 0.0678 155.6)"
+        ]
+      },
+      "dark-container": {
+        "role": "primary",
+        "displayName": "Deep green selection",
+        "tonalRamp": [
+          "oklch(15% 0.0652 154.7)",
+          "oklch(27% 0.0652 154.7)",
+          "oklch(39% 0.0652 154.7)",
+          "oklch(51% 0.0652 154.7)",
+          "oklch(63% 0.0652 154.7)",
+          "oklch(75% 0.0652 154.7)",
+          "oklch(87% 0.0652 154.7)",
+          "oklch(95% 0.0652 154.7)"
+        ]
+      },
+      "dark-on-container": {
+        "role": "primary",
+        "displayName": "Pale selection ink",
+        "tonalRamp": [
+          "oklch(15% 0.0316 154.1)",
+          "oklch(27% 0.0316 154.1)",
+          "oklch(39% 0.0316 154.1)",
+          "oklch(51% 0.0316 154.1)",
+          "oklch(63% 0.0316 154.1)",
+          "oklch(75% 0.0316 154.1)",
+          "oklch(87% 0.0316 154.1)",
+          "oklch(95% 0.0316 154.1)"
+        ]
+      },
+      "dark-surface": {
+        "role": "neutral",
+        "displayName": "Dark workbench",
+        "tonalRamp": [
+          "oklch(15% 0.0121 155.9)",
+          "oklch(27% 0.0121 155.9)",
+          "oklch(39% 0.0121 155.9)",
+          "oklch(51% 0.0121 155.9)",
+          "oklch(63% 0.0121 155.9)",
+          "oklch(75% 0.0121 155.9)",
+          "oklch(87% 0.0121 155.9)",
+          "oklch(95% 0.0121 155.9)"
+        ]
+      },
+      "dark-surface-variant": {
+        "role": "neutral",
+        "displayName": "Dark tonal surface",
+        "tonalRamp": [
+          "oklch(15% 0.0168 148.7)",
+          "oklch(27% 0.0168 148.7)",
+          "oklch(39% 0.0168 148.7)",
+          "oklch(51% 0.0168 148.7)",
+          "oklch(63% 0.0168 148.7)",
+          "oklch(75% 0.0168 148.7)",
+          "oklch(87% 0.0168 148.7)",
+          "oklch(95% 0.0168 148.7)"
+        ]
+      },
+      "dark-on-surface": {
+        "role": "neutral",
+        "displayName": "Soft light ink",
+        "tonalRamp": [
+          "oklch(15% 0.0120 133.4)",
+          "oklch(27% 0.0120 133.4)",
+          "oklch(39% 0.0120 133.4)",
+          "oklch(51% 0.0120 133.4)",
+          "oklch(63% 0.0120 133.4)",
+          "oklch(75% 0.0120 133.4)",
+          "oklch(87% 0.0120 133.4)",
+          "oklch(95% 0.0120 133.4)"
+        ]
+      },
+      "dark-secondary": {
+        "role": "neutral",
+        "displayName": "Muted light ink",
+        "tonalRamp": [
+          "oklch(15% 0.0206 143.0)",
+          "oklch(27% 0.0206 143.0)",
+          "oklch(39% 0.0206 143.0)",
+          "oklch(51% 0.0206 143.0)",
+          "oklch(63% 0.0206 143.0)",
+          "oklch(75% 0.0206 143.0)",
+          "oklch(87% 0.0206 143.0)",
+          "oklch(95% 0.0206 143.0)"
+        ]
+      },
+      "dark-outline": {
+        "role": "neutral",
+        "displayName": "Sage boundary in dark",
+        "tonalRamp": [
+          "oklch(15% 0.0223 145.3)",
+          "oklch(27% 0.0223 145.3)",
+          "oklch(39% 0.0223 145.3)",
+          "oklch(51% 0.0223 145.3)",
+          "oklch(63% 0.0223 145.3)",
+          "oklch(75% 0.0223 145.3)",
+          "oklch(87% 0.0223 145.3)",
+          "oklch(95% 0.0223 145.3)"
+        ]
+      },
+      "reader-surface": {
+        "role": "neutral",
+        "displayName": "Dark reader",
+        "tonalRamp": [
+          "oklch(15% 0.0121 155.9)",
+          "oklch(27% 0.0121 155.9)",
+          "oklch(39% 0.0121 155.9)",
+          "oklch(51% 0.0121 155.9)",
+          "oklch(63% 0.0121 155.9)",
+          "oklch(75% 0.0121 155.9)",
+          "oklch(87% 0.0121 155.9)",
+          "oklch(95% 0.0121 155.9)"
+        ]
+      },
+      "reader-text": {
+        "role": "neutral",
+        "displayName": "Warm-white script",
+        "tonalRamp": [
+          "oklch(15% 0.0085 128.6)",
+          "oklch(27% 0.0085 128.6)",
+          "oklch(39% 0.0085 128.6)",
+          "oklch(51% 0.0085 128.6)",
+          "oklch(63% 0.0085 128.6)",
+          "oklch(75% 0.0085 128.6)",
+          "oklch(87% 0.0085 128.6)",
+          "oklch(95% 0.0085 128.6)"
+        ]
+      },
+      "reader-accent": {
+        "role": "primary",
+        "displayName": "Mint timing accent",
+        "tonalRamp": [
+          "oklch(15% 0.0807 153.3)",
+          "oklch(27% 0.0807 153.3)",
+          "oklch(39% 0.0807 153.3)",
+          "oklch(51% 0.0807 153.3)",
+          "oklch(63% 0.0807 153.3)",
+          "oklch(75% 0.0807 153.3)",
+          "oklch(87% 0.0807 153.3)",
+          "oklch(95% 0.0807 153.3)"
+        ]
+      },
+      "reader-chrome": {
+        "role": "neutral",
+        "displayName": "Pale reader controls",
+        "tonalRamp": [
+          "oklch(15% 0.0184 150.6)",
+          "oklch(27% 0.0184 150.6)",
+          "oklch(39% 0.0184 150.6)",
+          "oklch(51% 0.0184 150.6)",
+          "oklch(63% 0.0184 150.6)",
+          "oklch(75% 0.0184 150.6)",
+          "oklch(87% 0.0184 150.6)",
+          "oklch(95% 0.0184 150.6)"
+        ]
+      },
+      "reader-focus": {
+        "role": "neutral",
+        "displayName": "First-line forest band",
+        "tonalRamp": [
+          "oklch(15% 0.0314 153.4)",
+          "oklch(27% 0.0314 153.4)",
+          "oklch(39% 0.0314 153.4)",
+          "oklch(51% 0.0314 153.4)",
+          "oklch(63% 0.0314 153.4)",
+          "oklch(75% 0.0314 153.4)",
+          "oklch(87% 0.0314 153.4)",
+          "oklch(95% 0.0314 153.4)"
+        ]
+      },
+      "reader-outline": {
+        "role": "neutral",
+        "displayName": "Reader boundary",
+        "tonalRamp": [
+          "oklch(15% 0.0283 152.6)",
+          "oklch(27% 0.0283 152.6)",
+          "oklch(39% 0.0283 152.6)",
+          "oklch(51% 0.0283 152.6)",
+          "oklch(63% 0.0283 152.6)",
+          "oklch(75% 0.0283 152.6)",
+          "oklch(87% 0.0283 152.6)",
+          "oklch(95% 0.0283 152.6)"
+        ]
+      },
+      "reader-play": {
+        "role": "primary",
+        "displayName": "Reader playback surface",
+        "tonalRamp": [
+          "oklch(15% 0.0524 152.7)",
+          "oklch(27% 0.0524 152.7)",
+          "oklch(39% 0.0524 152.7)",
+          "oklch(51% 0.0524 152.7)",
+          "oklch(63% 0.0524 152.7)",
+          "oklch(75% 0.0524 152.7)",
+          "oklch(87% 0.0524 152.7)",
+          "oklch(95% 0.0524 152.7)"
+        ]
+      }
+    },
+    "tonalRampPolicy": "Synthesized OKLCH ramps are preview metadata only; they are not implemented palette tokens. Exact native color primitives remain in DESIGN.md frontmatter.",
+    "typographyMeta": {
+      "headline": {
+        "displayName": "Native headline",
+        "purpose": "HeadlineSmall for the workbench introduction.",
+        "source": "?attr/textAppearanceHeadlineSmall"
+      },
+      "title": {
+        "displayName": "Native section title",
+        "purpose": "TitleMedium for section names.",
+        "source": "?attr/textAppearanceTitleMedium"
+      },
+      "body": {
+        "displayName": "Native body",
+        "purpose": "Inherited system/Material text roles; numeric values are library-owned."
+      },
+      "label": {
+        "displayName": "Native value label",
+        "purpose": "LabelLarge for setting values; BodySmall for captions.",
+        "source": "Near.Caption / ?attr/textAppearanceLabelLarge"
+      },
+      "script-editor": {
+        "displayName": "Script editor",
+        "purpose": "Multiline input.",
+        "lineSpacingExtra": "4dp"
+      },
+      "reader": {
+        "displayName": "Reading text",
+        "purpose": "Preview and floating text; default size in frontmatter.",
+        "adjustableRange": "18–42sp",
+        "lineSpacingMultiplier": 1.1,
+        "lineSpacingExtra": "5dp",
+        "fontPadding": false,
+        "scalesWithSystemFont": true
+      },
+      "reader-chrome": {
+        "displayName": "Reader controls",
+        "purpose": "Status and adjustment value labels; scales with system font."
+      }
+    },
+    "shadows": [
+      {
+        "name": "reader-elevation",
+        "value": "6dp",
+        "purpose": "Native Android elevation on the floating window; CSS shadow is a panel approximation."
+      }
+    ],
+    "motion": [
+      {
+        "name": "reader-scroll",
+        "value": "Choreographer frame callback; monotonic elapsed seconds × pixels per second; maximum frame step 0.1s",
+        "purpose": "Steady upward script movement at approximate chosen pace."
+      },
+      {
+        "name": "countdown",
+        "value": "3, 2, 1; one-second intervals",
+        "purpose": "Functional preparation delay before reading; pause cancels it."
+      },
+      {
+        "name": "native-ripple",
+        "value": "Material/Android RippleDrawable",
+        "purpose": "Native press feedback; custom icon tint #33B4EDC4, central play tint #44B4EDC4."
+      }
+    ],
+    "nativeLayout": {
+      "touchTarget": "48×48dp floating icon controls",
+      "independentControlGap": "8dp",
+      "persistentActionMinHeight": "56dp",
+      "horizontalPageInset": "24dp",
+      "previewHeight": "156dp",
+      "readerViewportHeight": "84–152dp",
+      "widthRatios": {
+        "narrow": 0.62,
+        "medium": 0.8,
+        "wide": 0.96
+      },
+      "widthBounds": "220dp minimum, safe screen width minus 8dp maximum",
+      "previewMeasurePercent": {
+        "narrow": 65,
+        "medium": 82,
+        "wide": 100
+      },
+      "defaultTop": "12dp",
+      "rotation": "Pause, recenter, recompute available width, viewport height and text layout.",
+      "insets": "Activity: system bars, cutout, IME on API 30+, system-window insets earlier; overlay uses system-bar/cutout-safe bounds on API 30+ and avoids cutouts on API 28+.",
+      "countdownGraphicSize": "54dp canvas numeral, not an sp typography role"
+    },
+    "readerStates": [
+      {
+        "name": "Ready",
+        "behavior": "At beginning and paused."
+      },
+      {
+        "name": "Starting",
+        "behavior": "Three-second countdown; pause cancels."
+      },
+      {
+        "name": "Scrolling",
+        "behavior": "Frame-timed upward text movement."
+      },
+      {
+        "name": "Paused",
+        "behavior": "Position retained; configured countdown applies on resume."
+      },
+      {
+        "name": "End of script",
+        "behavior": "Stop at last line; next play restarts."
+      }
+    ],
+    "evidence": {
+      "sourceFiles": [
+        "app/src/main/res/values/colors.xml",
+        "app/src/main/res/values-night/colors.xml",
+        "app/src/main/res/values/themes.xml",
+        "app/src/main/res/layout/activity_main.xml",
+        "app/src/main/java/com/mastermoh/near/MainActivity.java",
+        "app/src/main/java/com/mastermoh/near/PrompterService.java",
+        "app/src/main/java/com/mastermoh/near/ReaderView.java",
+        "app/src/main/java/com/mastermoh/near/IconButton.java",
+        "app/src/main/java/com/mastermoh/near/ScrollSession.java",
+        "app/src/main/java/com/mastermoh/near/PrompterSettings.java"
+      ],
+      "nativeScreenshots": [
+        "docs/images/verification/phone-light.png",
+        "docs/images/verification/phone-settings.png",
+        "docs/images/verification/phone-dark-large-text.png",
+        "docs/images/verification/phone-dark-settings-large-text.png",
+        "docs/images/verification/phone-overlay-large-text.png",
+        "docs/images/verification/phone-overlay-controls-large-text.png",
+        "docs/images/verification/phone-landscape-overlay.png"
+      ],
+      "reviewDisposition": "Ship as a personal testing build.",
+      "spacingFix": "Resolved: 8dp gaps with 48dp targets; recaptured portrait and landscape at system font scale 1.3.",
+      "environment": "Native Android emulator renders; overlay over AOSP Camera synthetic scene and editor.",
+      "hardwareLimitation": "The physical Pixel 7 Pro was not connected. Pixel Camera handling, lens placement, live audio, physical refresh-rate performance, and a real recorded take remain unverified.",
+      "imagery": "Code-led native controls; no image composition or generated imagery.",
+      "browserVerified": false
+    }
+  },
+  "components": [
+    {
+      "name": "Persistent filled action",
+      "kind": "button",
+      "refersTo": "button-primary-light",
+      "description": "Illustrative translation of the native MaterialButton. Minimum native height is 56 dp; wrap the label as native text grows.",
+      "html": "<button class=\"ds-primary\">Open over camera</button>",
+      "css": ".ds-primary{min-height:56px;width:100%;padding:12px 24px;border:0;border-radius:999px;background:#286341;color:#fff;font:500 14px system-ui,sans-serif;cursor:pointer}.ds-primary:hover{background:#245939}.ds-primary:active{background:#204e33}.ds-primary:focus-visible,.ds-outline:focus-visible,.ds-text:focus-visible{outline:2px solid #286341;outline-offset:3px}"
+    },
+    {
+      "name": "Close reader action",
+      "kind": "button",
+      "refersTo": "button-outlined-light",
+      "description": "Illustrative translation of the native outlined secondary action, visible while the reader runs.",
+      "html": "<button class=\"ds-outline\">Close reader</button>",
+      "css": ".ds-outline{min-height:48px;width:100%;padding:10px 24px;border:1px solid #707b70;border-radius:999px;background:transparent;color:#286341;font:500 14px system-ui,sans-serif;cursor:pointer}.ds-outline:hover{background:#d6ecdc66}.ds-outline:active{background:#d6ecdc}.ds-primary:focus-visible,.ds-outline:focus-visible,.ds-text:focus-visible{outline:2px solid #286341;outline-offset:3px}"
+    },
+    {
+      "name": "Scripts text action",
+      "kind": "button",
+      "refersTo": "button-text-light",
+      "description": "Illustrative translation of the native text button opening the checked script popup list.",
+      "html": "<button class=\"ds-text\">Scripts</button>",
+      "css": ".ds-text{min-height:48px;padding:10px 12px;border:0;border-radius:999px;background:transparent;color:#286341;font:500 14px system-ui,sans-serif;cursor:pointer}.ds-text:hover{background:#d6ecdc66}.ds-text:active{background:#d6ecdc}.ds-primary:focus-visible,.ds-outline:focus-visible,.ds-text:focus-visible{outline:2px solid #286341;outline-offset:3px}"
+    },
+    {
+      "name": "Outlined script fields",
+      "kind": "input",
+      "refersTo": "script-body-light",
+      "description": "Illustrative translation of native outlined title and multiline body fields; Android owns their real keyboard, labels, and focus behavior.",
+      "html": "<div class=\"ds-fields\"><label class=\"ds-title-label\">Script title<input class=\"ds-title-input\" value=\"My first take\"></label><textarea class=\"ds-body\" aria-label=\"Script text\">Take a breath. Look toward the camera.\\n\\nThis is your space to speak naturally.</textarea><p class=\"ds-stats\">79 words · about 0:40 at this pace</p></div>",
+      "css": ".ds-fields{color:#1b211b;font-family:system-ui,sans-serif;background:#f7f8f2}.ds-title-label{display:block;position:relative;padding:0 12px;border:1px solid #707b70;border-radius:4px;color:#505d52;font-size:12px}.ds-title-input{display:block;width:100%;min-height:48px;border:0;background:transparent;color:#1b211b;font:16px system-ui,sans-serif;outline:none}.ds-title-label:focus-within{border:2px solid #286341;color:#286341}.ds-body{display:block;box-sizing:border-box;width:100%;height:240px;margin-top:12px;padding:16px;border:1px solid #707b70;border-radius:4px;background:transparent;color:#1b211b;font:17px/1.45 system-ui,sans-serif;resize:vertical}.ds-body:hover{border-color:#1b211b}.ds-body:focus-visible{outline:2px solid #286341;outline-offset:-2px}.ds-stats{margin:8px 0 0;color:#505d52;font-size:12px}"
+    },
+    {
+      "name": "Native toolbar",
+      "kind": "nav",
+      "description": "Illustrative translation of the MaterialToolbar title and overflow entry point; menu rendering remains native.",
+      "html": "<div class=\"ds-toolbar\"><span>Near</span><button class=\"ds-overflow\" aria-label=\"More options\"><svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"5\" r=\"1\" fill=\"currentColor\"/><circle cx=\"12\" cy=\"12\" r=\"1\" fill=\"currentColor\"/><circle cx=\"12\" cy=\"19\" r=\"1\" fill=\"currentColor\"/></svg></button></div>",
+      "css": ".ds-toolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 8px;background:#f7f8f2;color:#1b211b;font:22px system-ui,sans-serif}.ds-overflow{display:grid;place-items:center;width:48px;height:48px;border:0;border-radius:50%;background:transparent;color:#1b211b;cursor:pointer}.ds-overflow:hover,.ds-overflow:active{background:#d6ecdc}.ds-overflow:focus-visible{outline:2px solid #286341;outline-offset:2px}"
+    },
+    {
+      "name": "Window width selector",
+      "kind": "custom",
+      "refersTo": "width-selected-light",
+      "description": "Illustrative translation of the joined single-selection MaterialButtonToggleGroup. The native group requires a selection.",
+      "html": "<div class=\"ds-width\" role=\"group\" aria-label=\"Window width\"><button aria-pressed=\"false\">Narrow</button><button aria-pressed=\"true\">Medium</button><button aria-pressed=\"false\">Wide</button></div>",
+      "css": ".ds-width{display:flex;border:1px solid #707b70;border-radius:999px;overflow:hidden;background:#f7f8f2}.ds-width button{flex:1;min-height:48px;padding:8px;border:0;border-right:1px solid #707b70;background:transparent;color:#1b211b;font:500 14px system-ui,sans-serif;cursor:pointer}.ds-width button:last-child{border-right:0}.ds-width button[aria-pressed=true]{background:#d6ecdc;color:#112d1c}.ds-width button:hover{background:#d6ecdc99}.ds-width button:focus-visible{outline:2px solid #286341;outline-offset:-3px}.ds-width button:active{background:#d6ecdc}"
+    },
+    {
+      "name": "Reading settings",
+      "kind": "custom",
+      "description": "Illustrative translation of native sliders and countdown switch. Browser input styling is a panel approximation only.",
+      "html": "<div class=\"ds-settings\"><label class=\"ds-setting-label\" for=\"ds-size\">Text size <output>26</output></label><input id=\"ds-size\" class=\"ds-range\" type=\"range\" min=\"18\" max=\"42\" value=\"26\" aria-label=\"Text size\"><label class=\"ds-countdown\"><span>3-second countdown</span><input type=\"checkbox\" role=\"switch\" checked></label><p>Gives you a moment after you tap Play.</p></div>",
+      "css": ".ds-settings{background:#f7f8f2;color:#1b211b;font:16px system-ui,sans-serif}.ds-setting-label{display:flex;justify-content:space-between;gap:8px}.ds-setting-label output{color:#286341;font-size:14px}.ds-range{width:100%;min-height:48px;accent-color:#286341;cursor:pointer}.ds-countdown{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:56px;margin-top:20px}.ds-countdown input{width:40px;height:24px;accent-color:#286341;cursor:pointer}.ds-settings p{margin:0;color:#505d52;font-size:12px}.ds-range:focus-visible,.ds-countdown input:focus-visible{outline:2px solid #286341;outline-offset:2px}.ds-range:hover,.ds-countdown:hover{filter:brightness(.97)}"
+    },
+    {
+      "name": "Reader preview",
+      "kind": "custom",
+      "refersTo": "reader-preview",
+      "description": "Illustrative static translation of ReaderView, showing its steady first-line band and 44 dp lower fade. Real text layout is Android StaticLayout.",
+      "html": "<div class=\"ds-preview\"><div class=\"ds-preview-band\"></div><div class=\"ds-preview-text\">Take a breath. Look<br>toward the camera.<br><br>This is your space.</div></div>",
+      "css": ".ds-preview{position:relative;height:156px;overflow:hidden;background:#111713;color:#f5f8f2;padding:0 18px}.ds-preview-band{position:absolute;top:12px;left:10px;right:10px;height:34px;border-radius:8px;background:#1f3024}.ds-preview-text{position:relative;padding-top:12px;font:500 26px/1.3 system-ui,sans-serif}.ds-preview:after{content:'';position:absolute;inset:auto 0 0;height:44px;background:linear-gradient(transparent,#111713)}"
+    },
+    {
+      "name": "Floating reader",
+      "kind": "custom",
+      "refersTo": "reader-window",
+      "description": "Illustrative static translation of the native overlay with expanded controls. CSS pixels represent dp one-to-one for this panel only; Android elevation, font scaling, gestures, countdown, and frame timing remain native.",
+      "html": "<section class=\"ds-reader\" aria-label=\"Floating reader example\"><div class=\"ds-reader-header\"><span>Ready · 120 wpm</span><button aria-label=\"Close reader\"><svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m6 6 12 12M18 6 6 18\"/></svg></button></div><div class=\"ds-reader-viewport\"><div class=\"ds-reader-band\"></div><div class=\"ds-reader-script\">Take a breath.<br>Look toward the<br>camera.</div></div><div class=\"ds-reader-playback\"><button aria-label=\"Restart script\"><svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 4v6h6\"/><path d=\"M4.6 10A8 8 0 1 0 12 4\"/></svg></button><button class=\"ds-reader-play\" aria-label=\"Play script\"><svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m7 4 13 8-13 8Z\" fill=\"currentColor\" stroke=\"none\"/></svg></button><button aria-label=\"Show or hide reader settings\"><svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 6h18M3 18h18\"/><circle cx=\"9\" cy=\"6\" r=\"2\" fill=\"currentColor\"/><circle cx=\"16\" cy=\"18\" r=\"2\" fill=\"currentColor\"/></svg></button></div><div class=\"ds-reader-adjust\"><div class=\"ds-reader-adjust-row\"><span>Text size 26</span><button aria-label=\"Smaller text\"><svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 12h14\"/></svg></button><button aria-label=\"Larger text\"><svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 12h14M12 5v14\"/></svg></button></div><div class=\"ds-reader-adjust-row\"><span>Pace 120 wpm</span><button aria-label=\"Scroll slower\"><svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 12h14\"/></svg></button><button aria-label=\"Scroll faster\"><svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 12h14M12 5v14\"/></svg></button></div></div></section>",
+      "css": ".ds-reader{width:320px;max-width:100%;overflow:hidden;border:1px solid #3f4f43;border-radius:18px;background:#111713;color:#e3efe5;box-shadow:0 6px 12px #0003;font:12px system-ui,sans-serif}.ds-reader-header{display:flex;align-items:center;height:48px;padding-left:14px}.ds-reader-header span{flex:1;cursor:move}.ds-reader button{display:grid;place-items:center;flex-shrink:0;width:48px;height:48px;padding:0;border:0;border-radius:12px;background:transparent;color:#e3efe5;cursor:pointer}.ds-reader button:hover{background:#b4edc433}.ds-reader button:active{background:#b4edc444}.ds-reader button:focus-visible{outline:2px solid #b4edc4;outline-offset:-3px}.ds-reader-viewport{position:relative;height:152px;overflow:hidden;padding:0 18px}.ds-reader-band{position:absolute;top:12px;left:10px;right:10px;height:34px;border-radius:8px;background:#1f3024}.ds-reader-script{position:relative;padding-top:12px;color:#f5f8f2;font:500 26px/1.3 system-ui,sans-serif}.ds-reader-viewport:after{content:'';position:absolute;inset:auto 0 0;height:44px;background:linear-gradient(transparent,#111713)}.ds-reader-playback{display:flex;gap:8px;padding:0 6px 4px}.ds-reader-playback .ds-reader-play{flex:1;width:auto;border-radius:14px;background:#31503a}.ds-reader-adjust{padding:4px 6px 8px}.ds-reader-adjust-row{display:flex;align-items:center;gap:8px}.ds-reader-adjust-row+.ds-reader-adjust-row{margin-top:8px}.ds-reader-adjust-row span{flex:1;padding-left:8px}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Native Android workbench",
+    "overview": "Near is a quiet, practical place to prepare words and read them close to the lens. Warm surfaces, forest green actions, system typography, and familiar Material 3 controls give editing and setup a clear hierarchy. The script is the main content; the interface stays compact and direct.\n\nThe signature is a dark floating reader with large warm-white text, a steady first-line focus band, and a bottom fade. Its header is a handle, its central control starts or pauses reading, and its small adjustment panel can be tucked away. This is a code-led native interface built with Java 17, Android views, and Material Components 1.13.0. There is no image composition or generated artwork behind the UI.",
+    "keyCharacteristics": [
+      "Native Material 3 editing and settings.",
+      "Warm light and forest dark editor themes.",
+      "An always-dark, movable reader with a stable reading line.",
+      "Persistent preparation action and plainly labeled reading controls.",
+      "Native density, font scaling, insets, and frame-timed movement."
+    ],
+    "rules": [
+      {
+        "name": "The Constant Reader Rule",
+        "body": "Keep the reading surface dark in both editor themes, with warm-white script text and a fixed first-line band.",
+        "section": "colors"
+      },
+      {
+        "name": "The Native Scale Rule",
+        "body": "Preserve system font scaling and wrapping; keep long settings and footer hints able to grow vertically.",
+        "section": "typography"
+      },
+      {
+        "name": "The Clear Target Rule",
+        "body": "Preserve 48 dp floating targets and 8 dp gaps between independent controls when the window resizes or text scales.",
+        "section": "layout"
+      }
+    ],
+    "dos": [
+      "Do use native Material 3 controls and inherited text appearances for the workbench.",
+      "Do keep the filled launch action available outside the scrolling preparation content.",
+      "Do keep the reader dark, its first-line band stationary, and its large text responsive to system font scale.",
+      "Do preserve 48 dp floating targets and 8 dp gaps between independent controls.",
+      "Do respect native insets, reflow text, and pause before recomputing rotated reader geometry.",
+      "Do use elapsed frame time for scrolling and keep countdown timing functional."
+    ],
+    "donts": [
+      "Don't replace native controls with a web wrapper or an image composition.",
+      "Don't introduce a separate decorative font, illustration, or card system into this workbench.",
+      "Don't use editor theme changes to invert the floating reader.",
+      "Don't turn reader play, pause, or close into camera recording controls.",
+      "Don't describe emulator screenshots as verification on the physical Pixel 7 Pro or Pixel Camera."
+    ]
+  }
+}

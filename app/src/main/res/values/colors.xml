@@ -1,0 +1,14 @@
+<resources>
+    <color name="near_primary">#286341</color>
+    <color name="near_on_primary">#FFFFFF</color>
+    <color name="near_container">#D6ECDC</color>
+    <color name="near_on_container">#112D1C</color>
+    <color name="near_surface">#F7F8F2</color>
+    <color name="near_surface_variant">#E7EAE1</color>
+    <color name="near_on_surface">#1B211B</color>
+    <color name="near_secondary">#505D52</color>
+    <color name="near_outline">#707B70</color>
+    <color name="near_reader">#111713</color>
+    <color name="near_reader_text">#F5F8F2</color>
+    <color name="near_accent">#B4EDC4</color>
+</resources>

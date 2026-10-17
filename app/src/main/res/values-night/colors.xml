@@ -1,0 +1,11 @@
+<resources>
+    <color name="near_primary">#A0D5B0</color>
+    <color name="near_on_primary">#07381F</color>
+    <color name="near_container">#244E34</color>
+    <color name="near_on_container">#D6ECDC</color>
+    <color name="near_surface">#111713</color>
+    <color name="near_surface_variant">#252D26</color>
+    <color name="near_on_surface">#E0E5DD</color>
+    <color name="near_secondary">#B6C1B5</color>
+    <color name="near_outline">#899589</color>
+</resources>
