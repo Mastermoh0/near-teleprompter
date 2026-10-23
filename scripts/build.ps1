@@ -20,6 +20,9 @@ try {
     else { & $gradle --console=plain assembleDebug }
     if ($LASTEXITCODE -ne 0) { throw 'Android build failed.' }
     New-Item -ItemType Directory -Force -Path (Join-Path $projectRoot 'releases') | Out-Null
-    Copy-Item -LiteralPath (Join-Path $projectRoot 'app\build\outputs\apk\debug\app-debug.apk') -Destination (Join-Path $projectRoot 'releases\near-teleprompter-1.0.apk') -Force
-    Write-Output 'APK: releases/near-teleprompter-1.0.apk'
+    $version = [regex]::Match((Get-Content (Join-Path $projectRoot 'app\build.gradle') -Raw), "versionName\s+'([^']+)'").Groups[1].Value
+    if (-not $version) { throw 'Could not read versionName.' }
+    $apkName = "near-teleprompter-$version-debug.apk"
+    Copy-Item -LiteralPath (Join-Path $projectRoot 'app\build\outputs\apk\debug\app-debug.apk') -Destination (Join-Path $projectRoot "releases\$apkName") -Force
+    Write-Output "APK: releases/$apkName"
 } finally { Pop-Location }

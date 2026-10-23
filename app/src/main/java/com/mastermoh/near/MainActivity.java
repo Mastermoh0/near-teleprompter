@@ -112,6 +112,12 @@ public final class MainActivity extends AppCompatActivity {
         });
         findViewById(R.id.library).setOnClickListener(this::showLibrary);
         findViewById(R.id.launch).setOnClickListener(view -> launchReader());
+        findViewById(R.id.record_in_near).setOnClickListener(view -> {
+            handler.removeCallbacks(refreshDraft); store.save();
+            if (script.body.trim().isEmpty()) { message(getString(R.string.empty_script)); body.requestFocus(); return; }
+            stopService(new Intent(this, PrompterService.class));
+            startActivity(new Intent(this, CameraActivity.class));
+        });
         findViewById(R.id.close_reader).setOnClickListener(view -> {
             stopService(new Intent(this, PrompterService.class));
             handler.postDelayed(this::updateReaderState, 150);
@@ -304,6 +310,9 @@ public final class MainActivity extends AppCompatActivity {
     @Override protected void onResume() {
         super.onResume();
         if (settings != null) {
+            // A share review can create a script while this editor is stopped.
+            handler.removeCallbacks(refreshDraft);
+            store = new ScriptStore(this); script = store.current(); showScript();
             loading = true;
             ((Slider) findViewById(R.id.text_size)).setValue(settings.textSize());
             ((Slider) findViewById(R.id.pace)).setValue(settings.pace());

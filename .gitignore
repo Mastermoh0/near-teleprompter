@@ -20,3 +20,4 @@ signing.properties
 keystore.properties
 /releases/*.apk
 /releases/SHA256SUMS.txt
+/output/

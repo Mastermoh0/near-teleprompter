@@ -1,28 +1,27 @@
-Near 1.0.0 is the first public, signed APK preview of the offline Android teleprompter.
+Near 1.1.0 adds recording inside the app and importing selected text through Android's Share menu.
 
-## Install
+## New
 
-Download `near-teleprompter-1.0.0.apk` from the Assets below on your Android phone. Open it in Files and allow that app to install APKs if Android asks. Open Near and allow **Display over other apps** when prompted. Then use the reader over your normal video camera.
+- **Record in Near** with a live front/rear camera preview, a translucent script reader, and capability-based 1080p/720p selection.
+- Independent background and text opacity, movable reader, text-size and reading-pace controls.
+- Record countdown, script pause that keeps the camera recording, and safe take finalization when leaving the camera.
+- Local playback through **Review last take**, with explicit video sharing.
+- **Share → Near** for plain text: review, edit, then save a new script. Existing scripts remain available. Oversized payloads are rejected before text layout; links are never fetched automatically.
 
-Android 8.0+ is the intended baseline. The main device target is Pixel 7 Pro. Use the front camera, drag the reader close to the lens, start recording in the camera, and then press Play on the reader.
+The external-camera floating mode remains available. Voice-follow is not included in this release.
 
-## Included
+## Install or update
 
-- Local script library and UTF-8 text import/export.
-- Text-size and pace controls, three window widths, and a draggable reader.
-- Countdown, pause/resume, swipe to reposition text, and restart.
-- Light/dark editor, larger-system-text layouts, and notification controls.
-- A complete YouTube-style build tutorial and a plain-text narration script.
-- MIT-licensed source and GitHub Actions build/release workflows.
+Download `near-teleprompter-1.1.0.apk` from Assets and open it on the phone. It uses the same signing identity as public 1.0.0, so it can update that installation. Keep the app installed when updating to retain scripts.
 
-Near requests no internet, camera, microphone, or storage permission. The camera app owns video and audio recording. Voice-follow scrolling is deferred.
+The earlier personal debug APK has a different signature. If you still use that build, export scripts before uninstalling it and installing the public APK. Uninstalling removes app-local data.
 
-## Validation and limits
+Built-in recording asks for camera and microphone access. If microphone access is declined, a silent take requires an explicit choice. External-camera mode still uses the camera app's own recording. There is no internet or broad storage permission.
 
-Build, JVM tests, Android Lint, and release-signature checks pass. Two device-flow tests passed on an Android 15 Pixel 7 Pro emulator. Native editor/overlay layouts were inspected in light/dark mode, portrait/landscape, and system font scale 1.3.
+On Android 10+, recordings save under Movies/Near. Android 8–9 uses app-specific storage; share those recordings before uninstalling Near.
 
-The actual Pixel 7 Pro and Pixel Camera were not connected. Do a short real recording to check overlay handling, audio, placement, and scrolling before a longer take. Emulator camera evidence uses AOSP Camera with a synthetic scene.
+## Verification and limits
 
-This release uses a dedicated release key. If you installed the earlier debug build, export your scripts before uninstalling it and installing this APK. Uninstalling removes local scripts; a different signing key cannot update over that build.
+The validation record for this release is in `VERIFICATION.md` in the source repository. Native screenshots and device-flow checks use an Android 15 emulator configured for Pixel 7 Pro dimensions. Camera images and audio inputs are simulated. They do not establish physical Pixel camera quality, real microphone sound, heat, or long-take reliability. Make a short recording on your actual phone first.
 
-`SHA256SUMS.txt` contains the APK's SHA-256 checksum. `TUTORIAL.md` and `tutorial-voiceover.txt` are included below as downloads and also live in the source repository.
+The APK is signed locally; its private signing key is not uploaded. `SHA256SUMS.txt` contains the public APK checksum. The original build tutorial, narration, and 1.1 implementation notes are included as release downloads.

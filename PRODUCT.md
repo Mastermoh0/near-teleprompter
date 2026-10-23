@@ -16,11 +16,11 @@ Muhammad, recording talking-head videos on a Google Pixel 7 Pro. Reading from a 
 
 ## Product Purpose
 
-Read a prepared script near the front camera while recording video in the existing Pixel Camera application, with natural-looking eye contact.
+Read a prepared script near the front camera while recording a video in Near or in an existing camera app, with natural-looking eye contact.
 
 ## Operating Context
 
-The user explicitly confirmed a floating teleprompter over the existing camera app. Scripts and settings must work offline. The camera app controls recording and owns the camera and microphone.
+The user first requested a floating teleprompter over an existing camera app, then approved a built-in camera and Share text into Near. Both recording choices remain available. Scripts and settings work offline. In the built-in mode, Near owns camera and microphone capture; in floating mode, the external camera app controls recording.
 
 ## Capabilities and Constraints
 
@@ -30,7 +30,9 @@ The user explicitly confirmed a floating teleprompter over the existing camera a
 - Start, pause, resume, and restart script scrolling while using the camera.
 - Voice-follow scrolling is deferred; it is optional in the user's brief.
 - Build target: Pixel 7 Pro, with support for Android 8.0 and later.
-- No account, server, analytics, microphone, camera, or internet permission in this application.
+- Built-in recording with a translucent reader, separate script playback, and review or sharing of the saved video.
+- Incoming shared plain text is reviewed and saved as a new script without replacing existing work.
+- No account, server, analytics, or internet permission. Camera and microphone access is requested for built-in recording.
 
 ## Product Principles
 

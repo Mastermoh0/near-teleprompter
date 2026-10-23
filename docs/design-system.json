@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-17T12:49:56.612Z",
+  "generatedAt": "2026-10-23T15:59:15Z",
   "title": "Design System: Near · Teleprompter",
   "extensions": {
     "platform": {
@@ -12,7 +12,8 @@
         "dp": "Android density-independent geometry",
         "sp": "Android scaled text size"
       },
-      "componentPreview": "Illustrative self-contained HTML/CSS translations only. One CSS px represents one dp for the design panel; these are not production app components, native screenshots, or browser verification."
+      "componentPreview": "Illustrative self-contained HTML/CSS translations only. One CSS px represents one dp for the design panel; these are not production app components, native screenshots, or browser verification.",
+      "cameraTheme": "Theme.Near.Camera; consistently dark camera/review content with native Material controls. The navigation edge independently follows the system day/night surface."
     },
     "colorMeta": {
       "light-primary": {
@@ -364,18 +365,43 @@
           "oklch(87% 0.0524 152.7)",
           "oklch(95% 0.0524 152.7)"
         ]
+      },
+      "camera-toolbar-scrim": {
+        "role": "neutral",
+        "displayName": "Camera toolbar scrim",
+        "purpose": "Native dark toolbar over live preview; alpha remains part of the canonical frontmatter color."
+      },
+      "camera-controls-scrim": {
+        "role": "neutral",
+        "displayName": "Camera control scrim",
+        "purpose": "Native dark action area over live preview; alpha remains part of the canonical frontmatter color."
+      },
+      "camera-surface-low": {
+        "role": "neutral",
+        "displayName": "Camera low surface",
+        "purpose": "Low Material container in the always-dark camera/review theme."
+      },
+      "camera-surface-lowest": {
+        "role": "neutral",
+        "displayName": "Camera lowest surface",
+        "purpose": "Lowest Material container in the always-dark camera/review theme."
+      },
+      "recording-stop": {
+        "role": "semantic",
+        "displayName": "Active recording stop",
+        "purpose": "Stop recording action only; accompanied by an explicit label, sound state, and elapsed timer."
       }
     },
     "tonalRampPolicy": "Synthesized OKLCH ramps are preview metadata only; they are not implemented palette tokens. Exact native color primitives remain in DESIGN.md frontmatter.",
     "typographyMeta": {
       "headline": {
         "displayName": "Native headline",
-        "purpose": "HeadlineSmall for the workbench introduction.",
+        "purpose": "HeadlineSmall for the editor and incoming-share introduction.",
         "source": "?attr/textAppearanceHeadlineSmall"
       },
       "title": {
         "displayName": "Native section title",
-        "purpose": "TitleMedium for section names.",
+        "purpose": "TitleMedium for section names, camera toolbar title, and primary Record action; TitleLarge for the camera reader sheet.",
         "source": "?attr/textAppearanceTitleMedium"
       },
       "body": {
@@ -384,7 +410,7 @@
       },
       "label": {
         "displayName": "Native value label",
-        "purpose": "LabelLarge for setting values; BodySmall for captions.",
+        "purpose": "LabelLarge for setting values and camera status; LabelMedium for the camera drag instruction; BodySmall for captions.",
         "source": "Near.Caption / ?attr/textAppearanceLabelLarge"
       },
       "script-editor": {
@@ -394,7 +420,7 @@
       },
       "reader": {
         "displayName": "Reading text",
-        "purpose": "Preview and floating text; default size in frontmatter.",
+        "purpose": "Editor preview, external floating reader, and translucent in-camera reading text; default size in frontmatter.",
         "adjustableRange": "18–42sp",
         "lineSpacingMultiplier": 1.1,
         "lineSpacingExtra": "5dp",
@@ -403,7 +429,7 @@
       },
       "reader-chrome": {
         "displayName": "Reader controls",
-        "purpose": "Status and adjustment value labels; scales with system font."
+        "purpose": "External-reader status and adjustment labels; camera chrome uses inherited Material roles."
       }
     },
     "shadows": [
@@ -451,7 +477,35 @@
       "defaultTop": "12dp",
       "rotation": "Pause, recenter, recompute available width, viewport height and text layout.",
       "insets": "Activity: system bars, cutout, IME on API 30+, system-window insets earlier; overlay uses system-bar/cutout-safe bounds on API 30+ and avoids cutouts on API 28+.",
-      "countdownGraphicSize": "54dp canvas numeral, not an sp typography role"
+      "countdownGraphicSize": "54dp canvas numeral, not an sp typography role",
+      "camera": {
+        "toolbarHeight": "56dp",
+        "stageMargin": "12dp",
+        "previewScaleType": "CameraX PreviewView fitCenter",
+        "readerMaxHeight": "220dp, limited by available stage height",
+        "readerHandleHeight": "48dp",
+        "readerPosition": "Starts at the top of the stage; handle drags vertically within stage bounds.",
+        "controlPadding": "12dp",
+        "scriptRowHeight": "48dp",
+        "recordActionHeight": "64dp",
+        "reviewTarget": "48x48dp",
+        "landscapeControlWidth": "280dp",
+        "landscape": "Weighted camera stage and controls arranged horizontally; portrait controls sit below the stage.",
+        "rotation": "Cancel countdown, pause script, stop/finalize the take, reflow controls, return reader to top, resize and rebind camera.",
+        "systemBars": "Status icons follow the resolved Material surface and request light icons over dark camera/review content. ScreenInsets separately paints bottom or side navigation insets from the system day/night near_surface resource and requests matching navigation icons. The reader-settings BottomSheet window receives the same protection. Final contrast verification remains with the finish reviewer."
+      },
+      "shareReview": {
+        "contentInset": "24dp",
+        "bodyHeight": "320dp",
+        "saveMinimumHeight": "56dp",
+        "cancelMinimumHeight": "48dp",
+        "form": "Weighted scrollable native form with title/body fields, character counter, and growing field-error copy; actions remain outside the scroll."
+      },
+      "videoReview": {
+        "player": "Weighted native VideoView with MediaController",
+        "shareHeight": "56dp",
+        "actionMargins": "16dp"
+      }
     },
     "readerStates": [
       {
@@ -486,7 +540,14 @@
         "app/src/main/java/com/mastermoh/near/ReaderView.java",
         "app/src/main/java/com/mastermoh/near/IconButton.java",
         "app/src/main/java/com/mastermoh/near/ScrollSession.java",
-        "app/src/main/java/com/mastermoh/near/PrompterSettings.java"
+        "app/src/main/java/com/mastermoh/near/PrompterSettings.java",
+        "app/src/main/java/com/mastermoh/near/CameraActivity.java",
+        "app/src/main/java/com/mastermoh/near/ShareTextActivity.java",
+        "app/src/main/java/com/mastermoh/near/ReviewActivity.java",
+        "app/src/main/java/com/mastermoh/near/ScreenInsets.java",
+        "app/src/main/java/com/mastermoh/near/SharedText.java",
+        "app/src/main/res/layout/activity_camera.xml",
+        "app/src/main/res/layout/activity_share_text.xml"
       ],
       "nativeScreenshots": [
         "docs/images/verification/phone-light.png",
@@ -495,14 +556,107 @@
         "docs/images/verification/phone-dark-settings-large-text.png",
         "docs/images/verification/phone-overlay-large-text.png",
         "docs/images/verification/phone-overlay-controls-large-text.png",
-        "docs/images/verification/phone-landscape-overlay.png"
+        "docs/images/verification/phone-landscape-overlay.png",
+        "docs/images/verification/v1.1/camera-phone.png",
+        "docs/images/verification/v1.1/camera-settings-phone.png",
+        "docs/images/verification/v1.1/camera-recording-phone.png",
+        "docs/images/verification/v1.1/camera-landscape-large.png",
+        "docs/images/verification/v1.1/review-phone.png",
+        "docs/images/verification/v1.1/share-phone.png",
+        "docs/images/verification/v1.1/share-dark-large-phone.png",
+        "docs/images/verification/v1.1/editor-phone.png"
       ],
-      "reviewDisposition": "Ship as a personal testing build.",
+      "reviewDisposition": "Original floating reader: ship as a personal testing build. Camera/share verdict: ship for the scored navigation-contrast and design-persistence fixes; both resolved.",
       "spacingFix": "Resolved: 8dp gaps with 48dp targets; recaptured portrait and landscape at system font scale 1.3.",
-      "environment": "Native Android emulator renders; overlay over AOSP Camera synthetic scene and editor.",
-      "hardwareLimitation": "The physical Pixel 7 Pro was not connected. Pixel Camera handling, lens placement, live audio, physical refresh-rate performance, and a real recorded take remain unverified.",
+      "environment": "Native Android emulator captures of editor, floating reader, built-in camera, recording, settings, video review, and incoming share review. Green blocks in camera captures are Android synthetic camera input.",
+      "hardwareLimitation": "The physical Pixel 7 Pro was not connected. Physical lens framing, real microphone quality, Pixel Camera handling, physical refresh-rate performance, and a real-device recorded take remain unverified.",
       "imagery": "Code-led native controls; no image composition or generated imagery.",
-      "browserVerified": false
+      "browserVerified": false,
+      "navigationContrast": "Source paints an explicit system-theme navigation-edge surface independently of dark camera/review content: warm light in day mode, dark at night, with matching icon appearance requested. Camera reader-settings BottomSheet applies the same protection. The finish reviewer scored the navigation fix resolved from idle/settings/recording/review/landscape captures, measuring approximately 8.80:1 contrast."
+    },
+    "recordingModes": [
+      {
+        "name": "Record in Near",
+        "entry": "Filled editor primary action, minimum 56dp.",
+        "owner": "Near CameraActivity / CameraX capture; camera permission required and microphone permission requested for sound.",
+        "behavior": "Flush current script, reject empty input, close external overlay, open camera."
+      },
+      {
+        "name": "Open over camera",
+        "entry": "Outlined editor secondary action, minimum 48dp.",
+        "owner": "External camera app owns recording; Near overlay service does not access camera or microphone.",
+        "behavior": "Preserves display-over-other-apps permission flow, optional notification controls, Update reader & open camera, and Close reader."
+      }
+    ],
+    "cameraReader": {
+      "layer": "Reader and controls are UI only; CameraX output encodes clean camera video without them.",
+      "appearance": "Translucent dark rounded panel; no external-reader focus band or bottom fade.",
+      "panelOpacity": {
+        "default": 55,
+        "minimum": 0,
+        "maximum": 100,
+        "step": 5,
+        "unit": "percent"
+      },
+      "textOpacity": {
+        "default": 100,
+        "minimum": 0,
+        "maximum": 100,
+        "step": 5,
+        "unit": "percent"
+      },
+      "resetAppearance": "Restores only panel/text opacity to 55/100; leaves size and pace unchanged.",
+      "settings": "Native scrollable Material bottom sheet with shared text size 18-42sp (step 1), pace 60-220wpm (step 5), and independent camera opacity sliders.",
+      "playback": "Tap or Play/Pause script toggles words; swipe seeks and pauses; Restart rewinds and pauses. None stops camera capture; script end also leaves capture running.",
+      "start": "Recording-start event begins script playback; optional Record countdown is independently cancelable."
+    },
+    "cameraStates": [
+      {
+        "name": "Opening / permission needed",
+        "behavior": "Record disabled until ready; Allow camera, app settings, or Retry camera provides recovery."
+      },
+      {
+        "name": "Ready",
+        "behavior": "Mint Record action; request microphone permission on recording. Denial offers a silent take, settings, or cancel."
+      },
+      {
+        "name": "Countdown",
+        "behavior": "Configured 3, 2, 1; primary action becomes Cancel countdown; script pauses."
+      },
+      {
+        "name": "Recording",
+        "behavior": "Red Stop recording action; sound/no-sound status with elapsed time. Script can be paused or resumed independently."
+      },
+      {
+        "name": "Saving",
+        "behavior": "Stop pauses script; capture finalizes and saved-file validation runs. Conflicting actions remain disabled."
+      },
+      {
+        "name": "Saved / partial / audio warning / failed",
+        "behavior": "Text distinguishes a valid take, playable interrupted take, missing expected audio, or save failure. Discard unplayable output; latest playable URI becomes review target."
+      }
+    ],
+    "cameraLifecycle": {
+      "leave": "Active capture shows Stop and leave / Cancel; finish navigation after saving.",
+      "background": "Cancel countdown, pause script, stop/finalize active capture.",
+      "rotation": "Stop/finalize active capture and reflow; recording does not continue across orientation change.",
+      "qualityAndLens": "Front lens when available; actual supported quality is labeled. Quality/lens changes disabled while countdown, recording, or saving.",
+      "reviewAvailability": "Enabled only when a saved last-take reference exists and camera is idle."
+    },
+    "videoReview": {
+      "source": "Latest validated playable take.",
+      "player": "Android VideoView and MediaController; play after preparation, pause off-screen, restore saved playback position on recreation.",
+      "error": "Missing/unplayable video gives native feedback and disables Share video.",
+      "sharing": "Native Android video/mp4 chooser with temporary read URI access."
+    },
+    "incomingSharedText": {
+      "accepted": "Android ACTION_SEND with text/plain; editable title and body review.",
+      "titleLimit": 80,
+      "bodyLimit": 100000,
+      "save": "Save as new script creates a new local entry and returns to editor; existing entries remain unchanged.",
+      "cancel": "Exit review without creating a script.",
+      "validation": "Disable save for blank or over-limit text. Reject an incoming payload above 100000 characters before editable layout and show an explicit field error; never silently truncate it.",
+      "urlOnly": "Keep URL as editable plain text, show the link-specific hint, and do not fetch the page."
     }
   },
   "components": [
@@ -510,15 +664,15 @@
       "name": "Persistent filled action",
       "kind": "button",
       "refersTo": "button-primary-light",
-      "description": "Illustrative translation of the native MaterialButton. Minimum native height is 56 dp; wrap the label as native text grows.",
-      "html": "<button class=\"ds-primary\">Open over camera</button>",
+      "description": "Illustrative translation of the native filled Record in Near editor action. Minimum native height is 56dp; wrap the label as native text grows. Open over camera is the separate outlined secondary action.",
+      "html": "<button class=\"ds-primary\">Record in Near</button>",
       "css": ".ds-primary{min-height:56px;width:100%;padding:12px 24px;border:0;border-radius:999px;background:#286341;color:#fff;font:500 14px system-ui,sans-serif;cursor:pointer}.ds-primary:hover{background:#245939}.ds-primary:active{background:#204e33}.ds-primary:focus-visible,.ds-outline:focus-visible,.ds-text:focus-visible{outline:2px solid #286341;outline-offset:3px}"
     },
     {
       "name": "Close reader action",
       "kind": "button",
       "refersTo": "button-outlined-light",
-      "description": "Illustrative translation of the native outlined secondary action, visible while the reader runs.",
+      "description": "Illustrative translation of the native outlined secondary style used by Open over camera and Close reader; Close reader appears while the external overlay runs.",
       "html": "<button class=\"ds-outline\">Close reader</button>",
       "css": ".ds-outline{min-height:48px;width:100%;padding:10px 24px;border:1px solid #707b70;border-radius:999px;background:transparent;color:#286341;font:500 14px system-ui,sans-serif;cursor:pointer}.ds-outline:hover{background:#d6ecdc66}.ds-outline:active{background:#d6ecdc}.ds-primary:focus-visible,.ds-outline:focus-visible,.ds-text:focus-visible{outline:2px solid #286341;outline-offset:3px}"
     },
@@ -534,7 +688,7 @@
       "name": "Outlined script fields",
       "kind": "input",
       "refersTo": "script-body-light",
-      "description": "Illustrative translation of native outlined title and multiline body fields; Android owns their real keyboard, labels, and focus behavior.",
+      "description": "Illustrative translation of native outlined title and multiline body fields; Android owns their real keyboard, labels, and focus behavior. Incoming-share review reuses these native fields with a 320dp body, character counter, and explicit validation; its Save as new script / Cancel actions create or discard a new entry.",
       "html": "<div class=\"ds-fields\"><label class=\"ds-title-label\">Script title<input class=\"ds-title-input\" value=\"My first take\"></label><textarea class=\"ds-body\" aria-label=\"Script text\">Take a breath. Look toward the camera.\\n\\nThis is your space to speak naturally.</textarea><p class=\"ds-stats\">79 words · about 0:40 at this pace</p></div>",
       "css": ".ds-fields{color:#1b211b;font-family:system-ui,sans-serif;background:#f7f8f2}.ds-title-label{display:block;position:relative;padding:0 12px;border:1px solid #707b70;border-radius:4px;color:#505d52;font-size:12px}.ds-title-input{display:block;width:100%;min-height:48px;border:0;background:transparent;color:#1b211b;font:16px system-ui,sans-serif;outline:none}.ds-title-label:focus-within{border:2px solid #286341;color:#286341}.ds-body{display:block;box-sizing:border-box;width:100%;height:240px;margin-top:12px;padding:16px;border:1px solid #707b70;border-radius:4px;background:transparent;color:#1b211b;font:17px/1.45 system-ui,sans-serif;resize:vertical}.ds-body:hover{border-color:#1b211b}.ds-body:focus-visible{outline:2px solid #286341;outline-offset:-2px}.ds-stats{margin:8px 0 0;color:#505d52;font-size:12px}"
     },
@@ -556,7 +710,7 @@
     {
       "name": "Reading settings",
       "kind": "custom",
-      "description": "Illustrative translation of native sliders and countdown switch. Browser input styling is a panel approximation only.",
+      "description": "Illustrative translation of native sliders and countdown switch. Browser input styling is a panel approximation only. The camera reader sheet additionally uses independent background/text opacity sliders (55/100 defaults) and Reset appearance.",
       "html": "<div class=\"ds-settings\"><label class=\"ds-setting-label\" for=\"ds-size\">Text size <output>26</output></label><input id=\"ds-size\" class=\"ds-range\" type=\"range\" min=\"18\" max=\"42\" value=\"26\" aria-label=\"Text size\"><label class=\"ds-countdown\"><span>3-second countdown</span><input type=\"checkbox\" role=\"switch\" checked></label><p>Gives you a moment after you tap Play.</p></div>",
       "css": ".ds-settings{background:#f7f8f2;color:#1b211b;font:16px system-ui,sans-serif}.ds-setting-label{display:flex;justify-content:space-between;gap:8px}.ds-setting-label output{color:#286341;font-size:14px}.ds-range{width:100%;min-height:48px;accent-color:#286341;cursor:pointer}.ds-countdown{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:56px;margin-top:20px}.ds-countdown input{width:40px;height:24px;accent-color:#286341;cursor:pointer}.ds-settings p{margin:0;color:#505d52;font-size:12px}.ds-range:focus-visible,.ds-countdown input:focus-visible{outline:2px solid #286341;outline-offset:2px}.ds-range:hover,.ds-countdown:hover{filter:brightness(.97)}"
     },
@@ -575,22 +729,39 @@
       "description": "Illustrative static translation of the native overlay with expanded controls. CSS pixels represent dp one-to-one for this panel only; Android elevation, font scaling, gestures, countdown, and frame timing remain native.",
       "html": "<section class=\"ds-reader\" aria-label=\"Floating reader example\"><div class=\"ds-reader-header\"><span>Ready · 120 wpm</span><button aria-label=\"Close reader\"><svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m6 6 12 12M18 6 6 18\"/></svg></button></div><div class=\"ds-reader-viewport\"><div class=\"ds-reader-band\"></div><div class=\"ds-reader-script\">Take a breath.<br>Look toward the<br>camera.</div></div><div class=\"ds-reader-playback\"><button aria-label=\"Restart script\"><svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 4v6h6\"/><path d=\"M4.6 10A8 8 0 1 0 12 4\"/></svg></button><button class=\"ds-reader-play\" aria-label=\"Play script\"><svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m7 4 13 8-13 8Z\" fill=\"currentColor\" stroke=\"none\"/></svg></button><button aria-label=\"Show or hide reader settings\"><svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 6h18M3 18h18\"/><circle cx=\"9\" cy=\"6\" r=\"2\" fill=\"currentColor\"/><circle cx=\"16\" cy=\"18\" r=\"2\" fill=\"currentColor\"/></svg></button></div><div class=\"ds-reader-adjust\"><div class=\"ds-reader-adjust-row\"><span>Text size 26</span><button aria-label=\"Smaller text\"><svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 12h14\"/></svg></button><button aria-label=\"Larger text\"><svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 12h14M12 5v14\"/></svg></button></div><div class=\"ds-reader-adjust-row\"><span>Pace 120 wpm</span><button aria-label=\"Scroll slower\"><svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 12h14\"/></svg></button><button aria-label=\"Scroll faster\"><svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 12h14M12 5v14\"/></svg></button></div></div></section>",
       "css": ".ds-reader{width:320px;max-width:100%;overflow:hidden;border:1px solid #3f4f43;border-radius:18px;background:#111713;color:#e3efe5;box-shadow:0 6px 12px #0003;font:12px system-ui,sans-serif}.ds-reader-header{display:flex;align-items:center;height:48px;padding-left:14px}.ds-reader-header span{flex:1;cursor:move}.ds-reader button{display:grid;place-items:center;flex-shrink:0;width:48px;height:48px;padding:0;border:0;border-radius:12px;background:transparent;color:#e3efe5;cursor:pointer}.ds-reader button:hover{background:#b4edc433}.ds-reader button:active{background:#b4edc444}.ds-reader button:focus-visible{outline:2px solid #b4edc4;outline-offset:-3px}.ds-reader-viewport{position:relative;height:152px;overflow:hidden;padding:0 18px}.ds-reader-band{position:absolute;top:12px;left:10px;right:10px;height:34px;border-radius:8px;background:#1f3024}.ds-reader-script{position:relative;padding-top:12px;color:#f5f8f2;font:500 26px/1.3 system-ui,sans-serif}.ds-reader-viewport:after{content:'';position:absolute;inset:auto 0 0;height:44px;background:linear-gradient(transparent,#111713)}.ds-reader-playback{display:flex;gap:8px;padding:0 6px 4px}.ds-reader-playback .ds-reader-play{flex:1;width:auto;border-radius:14px;background:#31503a}.ds-reader-adjust{padding:4px 6px 8px}.ds-reader-adjust-row{display:flex;align-items:center;gap:8px}.ds-reader-adjust-row+.ds-reader-adjust-row{margin-top:8px}.ds-reader-adjust-row span{flex:1;padding-left:8px}"
+    },
+    {
+      "name": "Camera reader panel",
+      "kind": "custom",
+      "refersTo": "camera-reader",
+      "description": "Illustrative translation of the translucent in-camera reader at 55% panel and 100% script opacity. The real background is CameraX live preview; this snippet supplies no invented scene or asset. Header dragging, scaling, and video exclusion remain native.",
+      "html": "<section class=\"ds-camera-reader\" aria-label=\"Camera reader example\"><div class=\"ds-camera-handle\">Drag to place your script</div><div class=\"ds-camera-words\">Take a breath.<br>Look toward the camera.</div></section>",
+      "css": ".ds-camera-reader{max-width:100%;height:220px;overflow:hidden;border-radius:18px;background:rgba(17,23,19,.55);color:#f5f8f2;font-family:system-ui,sans-serif}.ds-camera-handle{display:flex;align-items:center;min-height:48px;padding:0 18px;font-size:12px;cursor:move}.ds-camera-words{padding:12px 18px 0;font:500 26px/1.3 system-ui,sans-serif;opacity:1}"
+    },
+    {
+      "name": "Camera recording action",
+      "kind": "button",
+      "refersTo": "camera-record",
+      "description": "Illustrative native 64dp Record action; data-recording=true demonstrates its red Stop recording state. Real labels also include Cancel countdown and Saving your take; the separate Play/Pause script action never stops capture.",
+      "html": "<button class=\"ds-camera-record\" data-recording=\"false\">Record</button>",
+      "css": ".ds-camera-record{min-height:64px;width:100%;padding:12px 24px;border:0;border-radius:999px;background:#b4edc4;color:#07381f;font:500 16px system-ui,sans-serif;cursor:pointer}.ds-camera-record[data-recording=true]{background:#b3261e;color:#fff}.ds-camera-record:hover{filter:brightness(.96)}.ds-camera-record:active{filter:brightness(.9)}.ds-camera-record:focus-visible{outline:2px solid #f5f8f2;outline-offset:3px}.ds-camera-record:disabled{opacity:.4;cursor:default}"
     }
   ],
   "narrative": {
     "northStar": "Native Android workbench",
-    "overview": "Near is a quiet, practical place to prepare words and read them close to the lens. Warm surfaces, forest green actions, system typography, and familiar Material 3 controls give editing and setup a clear hierarchy. The script is the main content; the interface stays compact and direct.\n\nThe signature is a dark floating reader with large warm-white text, a steady first-line focus band, and a bottom fade. Its header is a handle, its central control starts or pauses reading, and its small adjustment panel can be tucked away. This is a code-led native interface built with Java 17, Android views, and Material Components 1.13.0. There is no image composition or generated artwork behind the UI.",
+    "overview": "Near is a quiet, practical place to prepare words, read them close to the lens, and record a take. Warm surfaces, forest green actions, system typography, and familiar Material 3 controls give editing and setup a clear hierarchy. The script and camera framing are the main content; the interface stays compact and direct.\n\nThe signature is a movable dark reader with large warm-white text. In floating mode it has a steady first-line focus band and bottom fade; in Near's camera it becomes a translucent rounded panel so framing remains visible through the words. Script playback stays separate from recording. This is a code-led native interface built with Java 17, Android views, and Material Components 1.13.0. There is no image composition or generated artwork behind the UI.",
     "keyCharacteristics": [
-      "Native Material 3 editing and settings.",
+      "Native Material 3 editing, camera controls, and settings.",
       "Warm light and forest dark editor themes.",
-      "An always-dark, movable reader with a stable reading line.",
-      "Persistent preparation action and plainly labeled reading controls.",
+      "A movable dark reader, opaque over other apps and translucent over Near's live camera.",
+      "Persistent recording choices and plainly labeled, independent script controls.",
+      "Review of clean video and editable plain-text shares before local saving.",
       "Native density, font scaling, insets, and frame-timed movement."
     ],
     "rules": [
       {
         "name": "The Constant Reader Rule",
-        "body": "Keep the reading surface dark in both editor themes, with warm-white script text and a fixed first-line band.",
+        "body": "Keep the reader's dark color family and warm-white script in both editor themes. Preserve the floating mode's fixed first-line band; omit that band and bottom fade in the translucent camera reader.",
         "section": "colors"
       },
       {
@@ -606,8 +777,10 @@
     ],
     "dos": [
       "Do use native Material 3 controls and inherited text appearances for the workbench.",
-      "Do keep the filled launch action available outside the scrolling preparation content.",
-      "Do keep the reader dark, its first-line band stationary, and its large text responsive to system font scale.",
+      "Do keep Record in Near primary and Open over camera secondary, outside the scrolling preparation content.",
+      "Do keep the floating reader dark with its first-line band stationary, and keep camera reader opacity independently adjustable.",
+      "Do keep script playback controls separate from Record / Stop recording and omit the reader from encoded video.",
+      "Do review incoming plain text before creating a new script; show explicit blank, oversize, and URL-only states.",
       "Do preserve 48 dp floating targets and 8 dp gaps between independent controls.",
       "Do respect native insets, reflow text, and pause before recomputing rotated reader geometry.",
       "Do use elapsed frame time for scrolling and keep countdown timing functional."
@@ -616,7 +789,8 @@
       "Don't replace native controls with a web wrapper or an image composition.",
       "Don't introduce a separate decorative font, illustration, or card system into this workbench.",
       "Don't use editor theme changes to invert the floating reader.",
-      "Don't turn reader play, pause, or close into camera recording controls.",
+      "Don't make script play, pause, or restart stop camera capture; keep recording lifecycle explicit.",
+      "Don't silently truncate shared text or fetch a shared URL as page content.",
       "Don't describe emulator screenshots as verification on the physical Pixel 7 Pro or Pixel Camera."
     ]
   }

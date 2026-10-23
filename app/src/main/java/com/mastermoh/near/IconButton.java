@@ -12,7 +12,7 @@ import androidx.appcompat.widget.AppCompatButton;
 
 /** Small, consistently drawn controls with full 48 dp touch targets and spoken labels. */
 final class IconButton extends AppCompatButton {
-    enum Icon { PLAY, PAUSE, RESTART, SETTINGS, CLOSE, MINUS, PLUS }
+    enum Icon { PLAY, PAUSE, RESTART, SETTINGS, CLOSE, MINUS, PLUS, BACK, FLIP, VIDEO }
     private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Path playPath = new Path();
     private Icon icon;
@@ -34,6 +34,14 @@ final class IconButton extends AppCompatButton {
         canvas.save(); canvas.translate(getWidth()/2f, getHeight()/2f); canvas.scale(dp(1), dp(1));
         paint.setColor(Color.rgb(227,239,229)); paint.setStyle(Paint.Style.STROKE); paint.setStrokeWidth(2); paint.setStrokeCap(Paint.Cap.ROUND); paint.setStrokeJoin(Paint.Join.ROUND);
         switch (icon) {
+            case BACK: canvas.drawLine(8,0,-8,0,paint); canvas.drawLine(-8,0,-1,-7,paint); canvas.drawLine(-8,0,-1,7,paint); break;
+            case VIDEO:
+                canvas.drawRoundRect(-10,-7,4,7,2,2,paint); canvas.drawLine(4,-3,10,-7,paint);
+                canvas.drawLine(10,-7,10,7,paint); canvas.drawLine(10,7,4,3,paint); break;
+            case FLIP:
+                canvas.drawArc(-9,-9,9,9,-140,125,false,paint); canvas.drawArc(-9,-9,9,9,40,125,false,paint);
+                canvas.drawLine(9,-8,9,0,paint); canvas.drawLine(9,0,2,-1,paint);
+                canvas.drawLine(-9,8,-9,0,paint); canvas.drawLine(-9,0,-2,1,paint); break;
             case PLAY:
                 paint.setStyle(Paint.Style.FILL); canvas.drawPath(playPath,paint); break;
             case PAUSE:

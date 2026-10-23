@@ -30,6 +30,7 @@ public final class ReaderView extends View {
     private Listener listener;
     private String countdown;
     private int measurePercent = 100;
+    private boolean cameraAppearance;
 
     public ReaderView(Context context) { this(context, null); }
     public ReaderView(Context context, AttributeSet attrs) {
@@ -50,6 +51,12 @@ public final class ReaderView extends View {
     void setMeasurePercent(int value) { measurePercent = value; rebuild(); }
     void setOffset(float value) { offset = value; invalidate(); }
     void setCountdown(String value) { countdown = value; invalidate(); }
+    void setCameraAppearance(int textOpacity) {
+        cameraAppearance = true;
+        setBackgroundColor(Color.TRANSPARENT);
+        textPaint.setAlpha(Math.round(255 * textOpacity / 100f));
+        invalidate();
+    }
     float maxOffset() { return layout == null ? 0 : layout.getLineTop(layout.getLineCount() - 1); }
     float pixelsPerSecond(int pace) {
         if (layout == null) return 0;
@@ -79,14 +86,14 @@ public final class ReaderView extends View {
         float left = (getWidth() - layout.getWidth()) / 2f;
         paint.setShader(null);
         paint.setColor(Color.rgb(31, 48, 36));
-        canvas.drawRoundRect(left - dp(8), dp(12), left + layout.getWidth() + dp(8), dp(12) + lineHeight(), dp(8), dp(8), paint);
+        if (!cameraAppearance) canvas.drawRoundRect(left - dp(8), dp(12), left + layout.getWidth() + dp(8), dp(12) + lineHeight(), dp(8), dp(8), paint);
         canvas.save();
         canvas.clipRect(0, dp(12), getWidth(), getHeight());
         canvas.translate(left, dp(12) - offset);
         layout.draw(canvas);
         canvas.restore();
         paint.setShader(fade);
-        canvas.drawRect(0, getHeight() - dp(44), getWidth(), getHeight(), paint);
+        if (!cameraAppearance) canvas.drawRect(0, getHeight() - dp(44), getWidth(), getHeight(), paint);
         paint.setShader(null);
         if (countdown != null) {
             paint.setColor(Color.argb(238,17,23,19)); canvas.drawRect(0,0,getWidth(),getHeight(),paint);
