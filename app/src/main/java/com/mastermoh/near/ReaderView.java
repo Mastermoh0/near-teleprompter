@@ -58,6 +58,8 @@ public final class ReaderView extends View {
         invalidate();
     }
     float maxOffset() { return layout == null ? 0 : layout.getLineTop(layout.getLineCount() - 1); }
+    float offsetForCharacter(int character) { return layout==null ? 0 : layout.getLineTop(layout.getLineForOffset(Math.max(0,Math.min(text.length(),character)))); }
+    int characterForOffset(float position) { return layout==null ? 0 : layout.getLineStart(layout.getLineForVertical(Math.max(0,Math.round(position)))); }
     float pixelsPerSecond(int pace) {
         if (layout == null) return 0;
         int words = ScrollSession.wordCount(text);

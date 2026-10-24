@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-23T15:59:15Z",
+  "generatedAt": "2026-10-24T05:56:16Z",
   "title": "Design System: Near · Teleprompter",
   "extensions": {
     "platform": {
@@ -13,7 +13,10 @@
         "sp": "Android scaled text size"
       },
       "componentPreview": "Illustrative self-contained HTML/CSS translations only. One CSS px represents one dp for the design panel; these are not production app components, native screenshots, or browser verification.",
-      "cameraTheme": "Theme.Near.Camera; consistently dark camera/review content with native Material controls. The navigation edge independently follows the system day/night surface."
+      "cameraTheme": "Theme.Near.Camera; consistently dark camera/review content with native Material controls. The navigation edge independently follows the system day/night surface.",
+      "recordedVersion": "1.2",
+      "recordedDate": "24 October 2026",
+      "mode": "Operate: bounded code-led extension of the incumbent native Android workbench."
     },
     "colorMeta": {
       "light-primary": {
@@ -396,7 +399,7 @@
     "typographyMeta": {
       "headline": {
         "displayName": "Native headline",
-        "purpose": "HeadlineSmall for the editor and incoming-share introduction.",
+        "purpose": "HeadlineSmall for the editor, incoming-share introduction, and Updates heading.",
         "source": "?attr/textAppearanceHeadlineSmall"
       },
       "title": {
@@ -406,11 +409,11 @@
       },
       "body": {
         "displayName": "Native body",
-        "purpose": "Inherited system/Material text roles; numeric values are library-owned."
+        "purpose": "Inherited system/Material text roles; Updates uses BodyLarge release status and BodyMedium notes. Numeric values remain library-owned."
       },
       "label": {
         "displayName": "Native value label",
-        "purpose": "LabelLarge for setting values and camera status; LabelMedium for the camera drag instruction; BodySmall for captions.",
+        "purpose": "LabelLarge for setting values, separate camera reading-mode label, and recording status; LabelMedium for the camera drag instruction; BodySmall for captions and recovery hints.",
         "source": "Near.Caption / ?attr/textAppearanceLabelLarge"
       },
       "script-editor": {
@@ -441,9 +444,9 @@
     ],
     "motion": [
       {
-        "name": "reader-scroll",
+        "name": "fixed-pace-reader-scroll",
         "value": "Choreographer frame callback; monotonic elapsed seconds × pixels per second; maximum frame step 0.1s",
-        "purpose": "Steady upward script movement at approximate chosen pace."
+        "purpose": "Steady upward script movement at approximate chosen pace in camera fixed-pace mode, editor preview, and the external reader; this path is not speech tracking."
       },
       {
         "name": "countdown",
@@ -454,6 +457,16 @@
         "name": "native-ripple",
         "value": "Material/Android RippleDrawable",
         "purpose": "Native press feedback; custom icon tint #33B4EDC4, central play tint #44B4EDC4."
+      },
+      {
+        "name": "camera-voice-follow",
+        "value": "Bounded ScriptMatcher character target; Choreographer elapsed step capped at 0.1s; distance × min(1, elapsed × 12), stopping within 0.5px.",
+        "purpose": "Camera-only English recognition moves toward the matched script offset. Silence/unmatched noise does not initiate timed advance; manual seeking reanchors matching. Pause stops listening and movement independently of capture."
+      },
+      {
+        "name": "update-state-feedback",
+        "value": "Native Material press/disabled states and polite live-region release status; no decorative entrance or transition.",
+        "purpose": "Checking disables Check; completion/failure restores the action. Android schedules background checks approximately daily and may defer them."
       }
     ],
     "nativeLayout": {
@@ -492,7 +505,14 @@
         "landscapeControlWidth": "280dp",
         "landscape": "Weighted camera stage and controls arranged horizontally; portrait controls sit below the stage.",
         "rotation": "Cancel countdown, pause script, stop/finalize the take, reflow controls, return reader to top, resize and rebind camera.",
-        "systemBars": "Status icons follow the resolved Material surface and request light icons over dark camera/review content. ScreenInsets separately paints bottom or side navigation insets from the system day/night near_surface resource and requests matching navigation icons. The reader-settings BottomSheet window receives the same protection. Final contrast verification remains with the finish reviewer."
+        "systemBars": "Status icons follow the resolved Material surface and request light icons over dark camera/review content. ScreenInsets separately paints bottom or side navigation insets from the system day/night near_surface resource and requests matching navigation icons. The reader-settings BottomSheet window receives the same protection. Final contrast verification remains with the finish reviewer.",
+        "modeLabel": "Separate fixed-pace / Voice follow · English / preparing label above independent script and recording controls.",
+        "readerSettings": {
+          "container": "Native scrollable Material BottomSheet; 24dp horizontal, 12dp top, 24dp bottom padding.",
+          "voiceSwitch": "64dp minimum height, 16dp opening gap, wrapping explanatory hint; select before a take.",
+          "modeAvailability": "Switch disabled during countdown, recording, or saving; fixed-pace slider disabled while voice-follow is selected.",
+          "largeText": "Portrait and the existing 280dp landscape controls preserve essential labels/actions at system font scale 1.3."
+        }
       },
       "shareReview": {
         "contentInset": "24dp",
@@ -505,6 +525,16 @@
         "player": "Weighted native VideoView with MediaController",
         "shareHeight": "56dp",
         "actionMargins": "16dp"
+      },
+      "updates": {
+        "container": "Native toolbar/back and weighted scrolling column; uninterrupted existing workbench surface.",
+        "contentInset": "24dp",
+        "firstViewport": "Installed version, live-region release status, then the primary action; notes and optional-alert switch continue below.",
+        "actionMinimumHeight": "56dp for Check and official Download",
+        "alertSwitchMinimumHeight": "64dp",
+        "notificationSettingsMinimumHeight": "48dp text action",
+        "reflow": "Status, release notes, permission hints, and privacy copy wrap vertically; dark mode uses incumbent day/night tokens, verified at font scale 1.3.",
+        "editorNotice": "48dp minimum text action below saved-local status inside the preparation scroll; recording choices remain in the persistent footer."
       }
     },
     "readerStates": [
@@ -547,7 +577,16 @@
         "app/src/main/java/com/mastermoh/near/ScreenInsets.java",
         "app/src/main/java/com/mastermoh/near/SharedText.java",
         "app/src/main/res/layout/activity_camera.xml",
-        "app/src/main/res/layout/activity_share_text.xml"
+        "app/src/main/res/layout/activity_share_text.xml",
+        "app/src/main/java/com/mastermoh/near/UpdatesActivity.java",
+        "app/src/main/java/com/mastermoh/near/UpdateChecker.java",
+        "app/src/main/java/com/mastermoh/near/UpdateJobService.java",
+        "app/src/main/java/com/mastermoh/near/OfflineVoice.java",
+        "app/src/main/java/com/mastermoh/near/ScriptMatcher.java",
+        "app/src/main/java/com/mastermoh/near/ReleaseVersion.java",
+        "app/src/main/res/layout/activity_updates.xml",
+        "app/src/main/res/values/strings.xml",
+        "app/src/main/AndroidManifest.xml"
       ],
       "nativeScreenshots": [
         "docs/images/verification/phone-light.png",
@@ -564,28 +603,107 @@
         "docs/images/verification/v1.1/review-phone.png",
         "docs/images/verification/v1.1/share-phone.png",
         "docs/images/verification/v1.1/share-dark-large-phone.png",
-        "docs/images/verification/v1.1/editor-phone.png"
+        "docs/images/verification/v1.1/editor-phone.png",
+        "docs/images/verification/v1.2/v12-editor-phone.png",
+        "docs/images/verification/v1.2/v12-updates-phone.png",
+        "docs/images/verification/v1.2/v12-updates-offline-phone.png",
+        "docs/images/verification/v1.2/v12-updates-dark-large-phone.png",
+        "docs/images/verification/v1.2/v12-updates-available-phone.png",
+        "docs/images/verification/v1.2/v12-voice-camera-phone.png",
+        "docs/images/verification/v1.2/v12-voice-settings-phone.png",
+        "docs/images/verification/v1.2/v12-voice-recording-phone.png",
+        "docs/images/verification/v1.2/v12-voice-landscape-large.png"
       ],
-      "reviewDisposition": "Original floating reader: ship as a personal testing build. Camera/share verdict: ship for the scored navigation-contrast and design-persistence fixes; both resolved.",
+      "reviewDisposition": "Original floating reader: ship as a personal testing build. Camera/share verdict: ship for the scored navigation-contrast and design-persistence fixes; both resolved. Version 1.2 finish review accepted all nine supplied captures and sampled source; its sole material fix requested this merge of 1.2 behavior into the incumbent design records. Final re-review pending.",
       "spacingFix": "Resolved: 8dp gaps with 48dp targets; recaptured portrait and landscape at system font scale 1.3.",
-      "environment": "Native Android emulator captures of editor, floating reader, built-in camera, recording, settings, video review, and incoming share review. Green blocks in camera captures are Android synthetic camera input.",
-      "hardwareLimitation": "The physical Pixel 7 Pro was not connected. Physical lens framing, real microphone quality, Pixel Camera handling, physical refresh-rate performance, and a real-device recorded take remain unverified.",
+      "environment": "Native Android 15 / API 35 x86_64 emulator using a Pixel 7 Pro display profile. v1.2 portrait 1440×3120 (eight files), landscape 3120×1440 (one file); dark Updates and landscape camera at font scale 1.3. Green blocks and framing bars are Android synthetic camera input.",
+      "hardwareLimitation": "Physical Pixel 7 Pro was not connected. Live recognition accuracy (accents, names, numbers), microphone sound, lens framing, Pixel Camera handling, physical gestures/refresh-rate performance, thermal behavior, long takes, other Android versions, and live alert timing under battery policies remain unverified. Emulator audio tracks and software test counts are not hardware proof.",
       "imagery": "Code-led native controls; no image composition or generated imagery.",
       "browserVerified": false,
-      "navigationContrast": "Source paints an explicit system-theme navigation-edge surface independently of dark camera/review content: warm light in day mode, dark at night, with matching icon appearance requested. Camera reader-settings BottomSheet applies the same protection. The finish reviewer scored the navigation fix resolved from idle/settings/recording/review/landscape captures, measuring approximately 8.80:1 contrast."
+      "navigationContrast": "Source paints an explicit system-theme navigation-edge surface independently of dark camera/review content: warm light in day mode, dark at night, with matching icon appearance requested. Camera reader-settings BottomSheet applies the same protection. The finish reviewer scored the navigation fix resolved from idle/settings/recording/review/landscape captures, measuring approximately 8.80:1 contrast.",
+      "version12Captures": [
+        {
+          "path": "docs/images/verification/v1.2/v12-editor-phone.png",
+          "state": "Editor and persistent recording choices.",
+          "width": 1440,
+          "height": 3120,
+          "systemFontScale": 1.0
+        },
+        {
+          "path": "docs/images/verification/v1.2/v12-updates-phone.png",
+          "state": "Installed 1.2.0 / current.",
+          "width": 1440,
+          "height": 3120,
+          "systemFontScale": 1.0
+        },
+        {
+          "path": "docs/images/verification/v1.2/v12-updates-offline-phone.png",
+          "state": "Offline failure and recovery.",
+          "width": 1440,
+          "height": 3120,
+          "systemFontScale": 1.0
+        },
+        {
+          "path": "docs/images/verification/v1.2/v12-updates-dark-large-phone.png",
+          "state": "Dark Updates / large text.",
+          "width": 1440,
+          "height": 3120,
+          "systemFontScale": 1.3
+        },
+        {
+          "path": "docs/images/verification/v1.2/v12-updates-available-phone.png",
+          "state": "Available state: visibly synthetic 99.0.0 fixture, filled Download and outlined Check, release notes. No such public release was published.",
+          "width": 1440,
+          "height": 3120,
+          "systemFontScale": 1.0
+        },
+        {
+          "path": "docs/images/verification/v1.2/v12-voice-camera-phone.png",
+          "state": "Voice-ready camera.",
+          "width": 1440,
+          "height": 3120,
+          "systemFontScale": 1.0
+        },
+        {
+          "path": "docs/images/verification/v1.2/v12-voice-settings-phone.png",
+          "state": "English voice switch, disabled fixed-pace slider, opacity settings.",
+          "width": 1440,
+          "height": 3120,
+          "systemFontScale": 1.0
+        },
+        {
+          "path": "docs/images/verification/v1.2/v12-voice-recording-phone.png",
+          "state": "Recording with independent script controls.",
+          "width": 1440,
+          "height": 3120,
+          "systemFontScale": 1.0
+        },
+        {
+          "path": "docs/images/verification/v1.2/v12-voice-landscape-large.png",
+          "state": "Landscape camera / large text.",
+          "width": 3120,
+          "height": 1440,
+          "systemFontScale": 1.3
+        }
+      ],
+      "recordedVersion": "1.2",
+      "recordedDate": "24 October 2026",
+      "provenance": "All nine supplied .impeccable/review/v12-*.png captures were opened by the finish reviewer and carry embedded provenance; docs/images/verification/v1.2 copies are identical published evidence. This documentation pass uses supplied evidence and source; no capture or test rerun.",
+      "syntheticRelease": "Available-update screenshot explicitly labels 99.0.0 as a synthetic cache fixture, restored after capture; no such public release was published.",
+      "reportedSoftwareChecks": "VERIFICATION.md reports 26 release JVM cases; seven new Android cases on final debug APK plus eight existing cases before final UI/matcher corrections (15 Android cases total); real bundled-model offline English WAV decode and signed-release emulator smoke check. These were not rerun for documentation and do not establish live microphone accuracy or hardware performance."
     },
     "recordingModes": [
       {
         "name": "Record in Near",
         "entry": "Filled editor primary action, minimum 56dp.",
         "owner": "Near CameraActivity / CameraX capture; camera permission required and microphone permission requested for sound.",
-        "behavior": "Flush current script, reject empty input, close external overlay, open camera."
+        "behavior": "Flush current script, reject empty input, close external overlay, open camera. Camera reader settings select offline English voice-follow or fixed pace before a take."
       },
       {
         "name": "Open over camera",
         "entry": "Outlined editor secondary action, minimum 48dp.",
         "owner": "External camera app owns recording; Near overlay service does not access camera or microphone.",
-        "behavior": "Preserves display-over-other-apps permission flow, optional notification controls, Update reader & open camera, and Close reader."
+        "behavior": "Preserves display-over-other-apps permission flow, optional notification controls, Update reader & open camera, and Close reader. External-reader script playback remains fixed pace with manual seeking; no voice-follow or microphone access."
       }
     ],
     "cameraReader": {
@@ -606,9 +724,16 @@
         "unit": "percent"
       },
       "resetAppearance": "Restores only panel/text opacity to 55/100; leaves size and pace unchanged.",
-      "settings": "Native scrollable Material bottom sheet with shared text size 18-42sp (step 1), pace 60-220wpm (step 5), and independent camera opacity sliders.",
-      "playback": "Tap or Play/Pause script toggles words; swipe seeks and pauses; Restart rewinds and pauses. None stops camera capture; script end also leaves capture running.",
-      "start": "Recording-start event begins script playback; optional Record countdown is independently cancelable."
+      "settings": "Native scrollable Material bottom sheet with persisted camera-only Voice follow · English switch before shared text size 18–42sp (step 1), fixed pace 60–220wpm (step 5), and independent camera opacity sliders. Select mode before a take; mode switch disabled during countdown, recording, and saving; fixed-pace slider disabled in voice mode.",
+      "playback": "Tap or Play/Pause script toggles the selected mode; Follow voice permits rehearsal. Pause stops voice listening, swipe seeks/pauses and reanchors matching, Restart rewinds/pauses. None stops capture; fixed pace and external-reader manual recovery remain available.",
+      "start": "Recording-start event begins script playback; optional Record countdown is independently cancelable.",
+      "voiceFollow": {
+        "scope": "Near camera only; bundled offline English Vosk model, no network speech service or fallback.",
+        "preference": "Persisted mode; change before a take. Model preparation gates Record and script play.",
+        "permission": "Microphone access is required for listening; Android permission flow precedes Follow voice. Check microphone access after failure or turn voice-follow off for fixed pace.",
+        "recovery": "Pause and swipe to reanchor, Restart to rewind, resume listening, or select fixed pace while idle. A silent take disables voice mode; capture audio interruption pauses listening and warns to review the take.",
+        "privacy": "Foreground on-device recognition; core reading/recording/speech stay offline. External overlay never listens."
+      }
     },
     "cameraStates": [
       {
@@ -657,7 +782,71 @@
       "cancel": "Exit review without creating a script.",
       "validation": "Disable save for blank or over-limit text. Reject an incoming payload above 100000 characters before editable layout and show an explicit field error; never silently truncate it.",
       "urlOnly": "Keep URL as editable plain text, show the link-specific hint, and do not fetch the page."
-    }
+    },
+    "cameraVoiceStates": [
+      {
+        "name": "Preparing",
+        "behavior": "Preparing offline voice follow…; Record and script play wait for the bundled model, without a network download."
+      },
+      {
+        "name": "Ready / following",
+        "behavior": "Voice follow · English mode label; Follow voice starts microphone recognition, becoming Pause script while active. Recording starts selected script mode on the actual capture-start event."
+      },
+      {
+        "name": "Paused / manual seek",
+        "behavior": "Recognition stops while video may continue; swipe seeks and reanchors matching, Restart rewinds and pauses."
+      },
+      {
+        "name": "Model / microphone failure",
+        "behavior": "Voice follow paused. Check microphone access, or turn voice follow off to use fixed pace. Preparation failure returns to fixed pace; listening failure pauses recognition."
+      },
+      {
+        "name": "Silent / audio interrupted",
+        "behavior": "Choosing a silent take disables voice mode. Capture audio errors stop listening and show explicit recording/saved audio warnings; review before use."
+      }
+    ],
+    "updates": {
+      "entry": "Editor overflow Updates plus conditional text notice: Get update alerts before introSeen, or Near [version] is available for a cached newer release.",
+      "installedVersion": "Installed 1.2.0 remains visible before release status in the 1.2 evidence.",
+      "metadata": "Manual checks and due editor refresh use public HTTPS GitHub release metadata. Valid stable release, expected official page, and official APK asset are required before caching version/notes; current means last successful check.",
+      "notes": "Show cached release notes only for a newer release; retain known valid metadata on offline/failed checks.",
+      "actionHierarchy": "Check is filled primary when no newer release exists. A newer release shows filled Open official download first and outlined Check for updates beneath.",
+      "installation": "ACTION_VIEW opens the official GitHub release page in a browser; download and Android installation happen only when the user chooses. No silent installer.",
+      "optionalAlerts": {
+        "default": false,
+        "schedule": "Opt-in persisted Android JobScheduler job, periodic 24 hours, requires any network and battery not low. Android may defer delivery; opting out cancels the job.",
+        "permissions": "Request POST_NOTIFICATIONS on Android 13+ when enabling alerts; blocked app notifications show recovery copy and Notification settings.",
+        "channelRecovery": "Notifier respects disabled app notifications and a blocked Updates channel. Android notification settings control permission/channel recovery.",
+        "delivery": "Notify once per valid newer release; defer while CameraActivity is visible or PrompterService is running. Alerts open Updates, staying outside the camera/floating-reader workflow."
+      },
+      "offlineBoundary": "Scripts, camera recording, and bundled English recognition remain offline. Only public release checks need internet; scripts, recordings, and speech are not uploaded. Older versions need one manual update-checking installation first."
+    },
+    "updateStates": [
+      {
+        "name": "Not checked",
+        "behavior": "Explain public-release checking and user-controlled installation; filled Check primary; installed version visible."
+      },
+      {
+        "name": "Checking",
+        "behavior": "Checking GitHub… in polite live-region status; Check disabled during request."
+      },
+      {
+        "name": "Installed / current",
+        "behavior": "Current according to last successful check; filled Check; Download and notes hidden without a newer release."
+      },
+      {
+        "name": "Offline / failed",
+        "behavior": "Could not check right now. Try again when online. You can still read and record. Check restored; known release cache retained."
+      },
+      {
+        "name": "Available",
+        "behavior": "Newer version and cached notes; filled official Download above outlined Check. Available evidence explicitly labels synthetic 99.0.0 and denies a published release."
+      },
+      {
+        "name": "Notifications blocked",
+        "behavior": "Keep alert preference visible; app-level block shows recovery hint and Notification settings. Respect disabled channel and recover through Android notification settings."
+      }
+    ]
   },
   "components": [
     {
@@ -695,7 +884,7 @@
     {
       "name": "Native toolbar",
       "kind": "nav",
-      "description": "Illustrative translation of the MaterialToolbar title and overflow entry point; menu rendering remains native.",
+      "description": "Illustrative translation of MaterialToolbar title and overflow entry point. Native menu includes Updates alongside import/export/delete/help; Updates has the native back toolbar. Conditional Get update alerts / newer-release text notice opens Updates from the editor. Menu/navigation rendering remains Android-owned.",
       "html": "<div class=\"ds-toolbar\"><span>Near</span><button class=\"ds-overflow\" aria-label=\"More options\"><svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"5\" r=\"1\" fill=\"currentColor\"/><circle cx=\"12\" cy=\"12\" r=\"1\" fill=\"currentColor\"/><circle cx=\"12\" cy=\"19\" r=\"1\" fill=\"currentColor\"/></svg></button></div>",
       "css": ".ds-toolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 8px;background:#f7f8f2;color:#1b211b;font:22px system-ui,sans-serif}.ds-overflow{display:grid;place-items:center;width:48px;height:48px;border:0;border-radius:50%;background:transparent;color:#1b211b;cursor:pointer}.ds-overflow:hover,.ds-overflow:active{background:#d6ecdc}.ds-overflow:focus-visible{outline:2px solid #286341;outline-offset:2px}"
     },
@@ -710,7 +899,7 @@
     {
       "name": "Reading settings",
       "kind": "custom",
-      "description": "Illustrative translation of native sliders and countdown switch. Browser input styling is a panel approximation only. The camera reader sheet additionally uses independent background/text opacity sliders (55/100 defaults) and Reset appearance.",
+      "description": "Illustrative native editor sliders/countdown switch; browser styling is only a panel approximation. Camera settings add a persisted English voice switch before a take, disabled fixed-pace slider in voice mode, independent background/text opacity (55/100 defaults), and Reset appearance. See camera voice controls preview for those states.",
       "html": "<div class=\"ds-settings\"><label class=\"ds-setting-label\" for=\"ds-size\">Text size <output>26</output></label><input id=\"ds-size\" class=\"ds-range\" type=\"range\" min=\"18\" max=\"42\" value=\"26\" aria-label=\"Text size\"><label class=\"ds-countdown\"><span>3-second countdown</span><input type=\"checkbox\" role=\"switch\" checked></label><p>Gives you a moment after you tap Play.</p></div>",
       "css": ".ds-settings{background:#f7f8f2;color:#1b211b;font:16px system-ui,sans-serif}.ds-setting-label{display:flex;justify-content:space-between;gap:8px}.ds-setting-label output{color:#286341;font-size:14px}.ds-range{width:100%;min-height:48px;accent-color:#286341;cursor:pointer}.ds-countdown{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:56px;margin-top:20px}.ds-countdown input{width:40px;height:24px;accent-color:#286341;cursor:pointer}.ds-settings p{margin:0;color:#505d52;font-size:12px}.ds-range:focus-visible,.ds-countdown input:focus-visible{outline:2px solid #286341;outline-offset:2px}.ds-range:hover,.ds-countdown:hover{filter:brightness(.97)}"
     },
@@ -726,7 +915,7 @@
       "name": "Floating reader",
       "kind": "custom",
       "refersTo": "reader-window",
-      "description": "Illustrative static translation of the native overlay with expanded controls. CSS pixels represent dp one-to-one for this panel only; Android elevation, font scaling, gestures, countdown, and frame timing remain native.",
+      "description": "Illustrative static translation of the native overlay with expanded controls. CSS pixels represent dp one-to-one for this panel only; Android elevation, font scaling, gestures, countdown, and frame timing remain native. This external-camera mode retains fixed-pace scrolling and manual seeking, with no recognition or microphone access.",
       "html": "<section class=\"ds-reader\" aria-label=\"Floating reader example\"><div class=\"ds-reader-header\"><span>Ready · 120 wpm</span><button aria-label=\"Close reader\"><svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m6 6 12 12M18 6 6 18\"/></svg></button></div><div class=\"ds-reader-viewport\"><div class=\"ds-reader-band\"></div><div class=\"ds-reader-script\">Take a breath.<br>Look toward the<br>camera.</div></div><div class=\"ds-reader-playback\"><button aria-label=\"Restart script\"><svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 4v6h6\"/><path d=\"M4.6 10A8 8 0 1 0 12 4\"/></svg></button><button class=\"ds-reader-play\" aria-label=\"Play script\"><svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m7 4 13 8-13 8Z\" fill=\"currentColor\" stroke=\"none\"/></svg></button><button aria-label=\"Show or hide reader settings\"><svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 6h18M3 18h18\"/><circle cx=\"9\" cy=\"6\" r=\"2\" fill=\"currentColor\"/><circle cx=\"16\" cy=\"18\" r=\"2\" fill=\"currentColor\"/></svg></button></div><div class=\"ds-reader-adjust\"><div class=\"ds-reader-adjust-row\"><span>Text size 26</span><button aria-label=\"Smaller text\"><svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 12h14\"/></svg></button><button aria-label=\"Larger text\"><svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 12h14M12 5v14\"/></svg></button></div><div class=\"ds-reader-adjust-row\"><span>Pace 120 wpm</span><button aria-label=\"Scroll slower\"><svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 12h14\"/></svg></button><button aria-label=\"Scroll faster\"><svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 12h14M12 5v14\"/></svg></button></div></div></section>",
       "css": ".ds-reader{width:320px;max-width:100%;overflow:hidden;border:1px solid #3f4f43;border-radius:18px;background:#111713;color:#e3efe5;box-shadow:0 6px 12px #0003;font:12px system-ui,sans-serif}.ds-reader-header{display:flex;align-items:center;height:48px;padding-left:14px}.ds-reader-header span{flex:1;cursor:move}.ds-reader button{display:grid;place-items:center;flex-shrink:0;width:48px;height:48px;padding:0;border:0;border-radius:12px;background:transparent;color:#e3efe5;cursor:pointer}.ds-reader button:hover{background:#b4edc433}.ds-reader button:active{background:#b4edc444}.ds-reader button:focus-visible{outline:2px solid #b4edc4;outline-offset:-3px}.ds-reader-viewport{position:relative;height:152px;overflow:hidden;padding:0 18px}.ds-reader-band{position:absolute;top:12px;left:10px;right:10px;height:34px;border-radius:8px;background:#1f3024}.ds-reader-script{position:relative;padding-top:12px;color:#f5f8f2;font:500 26px/1.3 system-ui,sans-serif}.ds-reader-viewport:after{content:'';position:absolute;inset:auto 0 0;height:44px;background:linear-gradient(transparent,#111713)}.ds-reader-playback{display:flex;gap:8px;padding:0 6px 4px}.ds-reader-playback .ds-reader-play{flex:1;width:auto;border-radius:14px;background:#31503a}.ds-reader-adjust{padding:4px 6px 8px}.ds-reader-adjust-row{display:flex;align-items:center;gap:8px}.ds-reader-adjust-row+.ds-reader-adjust-row{margin-top:8px}.ds-reader-adjust-row span{flex:1;padding-left:8px}"
     },
@@ -734,7 +923,7 @@
       "name": "Camera reader panel",
       "kind": "custom",
       "refersTo": "camera-reader",
-      "description": "Illustrative translation of the translucent in-camera reader at 55% panel and 100% script opacity. The real background is CameraX live preview; this snippet supplies no invented scene or asset. Header dragging, scaling, and video exclusion remain native.",
+      "description": "Illustrative translation of the translucent in-camera reader at 55% panel and 100% script opacity. The real background is CameraX live preview; this snippet supplies no invented scene or asset. Header dragging, scaling, and video exclusion remain native. Camera-only offline English voice-follow or fixed pace is chosen before a take; mode and recording status stay outside the script. Pause, swipe, and Restart recover script position without stopping capture.",
       "html": "<section class=\"ds-camera-reader\" aria-label=\"Camera reader example\"><div class=\"ds-camera-handle\">Drag to place your script</div><div class=\"ds-camera-words\">Take a breath.<br>Look toward the camera.</div></section>",
       "css": ".ds-camera-reader{max-width:100%;height:220px;overflow:hidden;border-radius:18px;background:rgba(17,23,19,.55);color:#f5f8f2;font-family:system-ui,sans-serif}.ds-camera-handle{display:flex;align-items:center;min-height:48px;padding:0 18px;font-size:12px;cursor:move}.ds-camera-words{padding:12px 18px 0;font:500 26px/1.3 system-ui,sans-serif;opacity:1}"
     },
@@ -742,20 +931,38 @@
       "name": "Camera recording action",
       "kind": "button",
       "refersTo": "camera-record",
-      "description": "Illustrative native 64dp Record action; data-recording=true demonstrates its red Stop recording state. Real labels also include Cancel countdown and Saving your take; the separate Play/Pause script action never stops capture.",
+      "description": "Illustrative native 64dp Record action; data-recording=true demonstrates its red Stop recording state. Real labels also include Cancel countdown and Saving your take; the separate Play/Pause script action never stops capture. Record and script play wait while the local voice model prepares. A silent take disables voice-follow; microphone/audio failures provide explicit recovery and saved-take review warnings.",
       "html": "<button class=\"ds-camera-record\" data-recording=\"false\">Record</button>",
       "css": ".ds-camera-record{min-height:64px;width:100%;padding:12px 24px;border:0;border-radius:999px;background:#b4edc4;color:#07381f;font:500 16px system-ui,sans-serif;cursor:pointer}.ds-camera-record[data-recording=true]{background:#b3261e;color:#fff}.ds-camera-record:hover{filter:brightness(.96)}.ds-camera-record:active{filter:brightness(.9)}.ds-camera-record:focus-visible{outline:2px solid #f5f8f2;outline-offset:3px}.ds-camera-record:disabled{opacity:.4;cursor:default}"
+    },
+    {
+      "name": "Camera voice controls",
+      "kind": "custom",
+      "refersTo": "camera-reader",
+      "description": "Illustrative native dark reader-settings and script-controls translation. English Vosk recognition stays on the phone and only in Near camera. Choose mode before a take; switch disables during countdown/recording/saving. Fixed-pace slider is disabled while voice is selected. The actual sheet also retains size and opacity sliders. HTML is a state preview, not a working recognizer or Android permission flow.",
+      "html": "<section class=\"ds-voice\"><h3>Reader settings</h3><label class=\"ds-voice-switch\"><span>Voice follow · English</span><input type=\"checkbox\" role=\"switch\" checked aria-label=\"Voice follow English\"></label><p>Choose before a take. English recognition runs on this phone. Pause or swipe if it loses your place. Fixed pace remains available; pace controls apply to that mode.</p><label class=\"ds-voice-pace\" for=\"ds-voice-pace\">Reading pace <output>120</output></label><input id=\"ds-voice-pace\" class=\"ds-voice-range\" type=\"range\" min=\"60\" max=\"220\" value=\"120\" disabled aria-label=\"Fixed reading pace, disabled in voice mode\"><div class=\"ds-voice-mode\">Voice follow · English</div><button class=\"ds-voice-follow\">Follow voice</button><p>Pause script stops listening while your video continues. Check microphone access after a failure, or turn voice follow off for fixed pace.</p></section>",
+      "css": ".ds-voice{padding:12px 24px 24px;background:#111713;color:#e0e5dd;font:16px system-ui,sans-serif}.ds-voice h3{margin:0;font-size:22px;font-weight:500}.ds-voice-switch{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:64px;margin-top:16px;color:#f5f8f2}.ds-voice-switch input{width:40px;height:24px;accent-color:#a0d5b0;cursor:pointer}.ds-voice p{margin:8px 0 16px;color:#b6c1b5;font-size:12px;line-height:1.5}.ds-voice-pace{display:flex;justify-content:space-between;gap:8px}.ds-voice-range{width:100%;min-height:48px;accent-color:#a0d5b0;opacity:.4}.ds-voice-mode{margin:8px 0;color:#b6c1b5;font-size:12px}.ds-voice-follow{width:100%;min-height:48px;border:1px solid #899589;border-radius:999px;padding:12px 16px;background:transparent;color:#a0d5b0;font:500 14px system-ui,sans-serif;cursor:pointer}.ds-voice-follow:hover,.ds-voice-follow:active{background:#244e34}.ds-voice-follow:focus-visible,.ds-voice-switch input:focus-visible{outline:2px solid #b4edc4;outline-offset:2px}.ds-voice-follow:disabled,.ds-voice-switch input:disabled{opacity:.4;cursor:default}"
+    },
+    {
+      "name": "Updates status and actions",
+      "kind": "custom",
+      "refersTo": "button-primary-light",
+      "description": "Illustrative native Updates column, reusing incumbent Material color/type/control grammar. data-state may be available, current, not-checked, or offline; available promotes filled official Download above outlined Check and exposes cached notes. The visible 99.0.0 example is synthetic, not a published release. The native screen also handles checking/blocked notifications; browser download and Android installation remain user-controlled. Optional alerts use persisted, battery/network-constrained daily JobScheduler checks, deferred during camera/overlay use.",
+      "html": "<section class=\"ds-updates\" data-state=\"available\"><h3>Keep Near up to date.</h3><p class=\"ds-updates-caption\">Installed version 1.2.0</p><p class=\"ds-updates-status ds-updates-available\" role=\"status\">Near 99.0.0 is available</p><p class=\"ds-updates-status ds-updates-current\" role=\"status\">Your installed version is current according to the last successful check.</p><p class=\"ds-updates-status ds-updates-not-checked\" role=\"status\">Check for the latest public release. Download and installation happen only when you choose.</p><p class=\"ds-updates-status ds-updates-offline\" role=\"status\">Could not check right now. Try again when online. You can still read and record.</p><button class=\"ds-updates-download\">Open official download</button><button class=\"ds-updates-check\">Check for updates</button><p class=\"ds-updates-notes\">Synthetic 99.0.0 preview fixture. No such public release was published.</p><label class=\"ds-updates-alerts\"><span>Update notifications</span><input type=\"checkbox\" role=\"switch\" aria-label=\"Update notifications\"></label><p class=\"ds-updates-caption\">Check about once a day while online. Android may delay checks to save battery. Prompts stay out of the camera screen.</p><p class=\"ds-updates-privacy\">Near checks public release information on GitHub over the internet. Scripts, recordings, and speech stay on this phone. Prompting and voice-follow work offline.</p></section>",
+      "css": ".ds-updates{padding:24px;background:#f7f8f2;color:#1b211b;font:16px system-ui,sans-serif}.ds-updates h3{margin:0;font-size:24px;font-weight:400;line-height:1.35}.ds-updates-caption{margin:8px 0 0;color:#505d52;font-size:12px;line-height:1.5}.ds-updates-status{display:none;margin:24px 0 0;font-size:16px;line-height:1.5}.ds-updates[data-state=available] .ds-updates-available,.ds-updates[data-state=current] .ds-updates-current,.ds-updates[data-state=not-checked] .ds-updates-not-checked,.ds-updates[data-state=offline] .ds-updates-offline{display:block}.ds-updates button{width:100%;min-height:56px;border-radius:999px;padding:12px 16px;font:500 14px system-ui,sans-serif;cursor:pointer}.ds-updates-download{display:none;margin-top:8px;border:0;background:#286341;color:#fff}.ds-updates-check{margin-top:16px;border:0;background:#286341;color:#fff}.ds-updates[data-state=available] .ds-updates-download{display:block}.ds-updates[data-state=available] .ds-updates-check{border:1px solid #286341;background:transparent;color:#286341}.ds-updates-notes{display:none;margin:16px 0 0;font-size:14px;line-height:1.5}.ds-updates[data-state=available] .ds-updates-notes{display:block}.ds-updates-alerts{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:64px;margin-top:24px}.ds-updates-alerts input{width:40px;height:24px;accent-color:#286341;cursor:pointer}.ds-updates-privacy{margin:24px 0 0;color:#505d52;font-size:12px;line-height:1.5}.ds-updates button:hover{filter:brightness(.96)}.ds-updates button:active{filter:brightness(.9)}.ds-updates button:focus-visible,.ds-updates-alerts input:focus-visible{outline:2px solid #286341;outline-offset:2px}.ds-updates button:disabled{opacity:.4;cursor:default}"
     }
   ],
   "narrative": {
     "northStar": "Native Android workbench",
-    "overview": "Near is a quiet, practical place to prepare words, read them close to the lens, and record a take. Warm surfaces, forest green actions, system typography, and familiar Material 3 controls give editing and setup a clear hierarchy. The script and camera framing are the main content; the interface stays compact and direct.\n\nThe signature is a movable dark reader with large warm-white text. In floating mode it has a steady first-line focus band and bottom fade; in Near's camera it becomes a translucent rounded panel so framing remains visible through the words. Script playback stays separate from recording. This is a code-led native interface built with Java 17, Android views, and Material Components 1.13.0. There is no image composition or generated artwork behind the UI.",
+    "overview": "Near is a quiet, practical place to prepare words, read them close to the lens, and record a take. Warm surfaces, forest green actions, system typography, and familiar Material 3 controls give editing and setup a clear hierarchy. The script and camera framing are the main content; the interface stays compact and direct.\n\nThe signature is a movable dark reader with large warm-white text. In floating mode it has a steady first-line focus band and bottom fade; in Near's camera it becomes a translucent rounded panel so framing remains visible through the words. Script playback stays separate from recording. This is a code-led native interface built with Java 17, Android views, and Material Components 1.13.0. There is no image composition or generated artwork behind the UI.\n\nVersion 1.2 extends this identity with camera-only offline English voice-follow and a native Updates workbench. Mode, recording state, permission recovery, and release status use existing Material type, switches, sliders, text feedback, and action hierarchy; no new visual world or assets are introduced.",
     "keyCharacteristics": [
       "Native Material 3 editing, camera controls, and settings.",
       "Warm light and forest dark editor themes.",
       "A movable dark reader, opaque over other apps and translucent over Near's live camera.",
       "Persistent recording choices and plainly labeled, independent script controls.",
       "Review of clean video and editable plain-text shares before local saving.",
+      "Camera-only offline English voice-follow with pause, manual seeking, restart, and fixed-pace recovery; external-reader mode remains fixed pace.",
+      "Optional online public-release checks and alerts in the existing native workbench; offline scripts, speech, and video remain on the phone.",
       "Native density, font scaling, insets, and frame-timed movement."
     ],
     "rules": [
@@ -783,7 +990,10 @@
       "Do review incoming plain text before creating a new script; show explicit blank, oversize, and URL-only states.",
       "Do preserve 48 dp floating targets and 8 dp gaps between independent controls.",
       "Do respect native insets, reflow text, and pause before recomputing rotated reader geometry.",
-      "Do use elapsed frame time for scrolling and keep countdown timing functional."
+      "Do use elapsed frame time for scrolling and keep countdown timing functional.",
+      "Do select English voice-follow before a take, disable the fixed-pace slider in voice mode, and preserve manual seek/restart/fixed-pace recovery.",
+      "Do make official Download filled primary only for a newer release, with outlined Check below; keep notification alerts opt-in and prompts outside camera/overlay use.",
+      "Do distinguish offline core operation from online public-release metadata and keep browser download/installation user-controlled."
     ],
     "donts": [
       "Don't replace native controls with a web wrapper or an image composition.",

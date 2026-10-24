@@ -41,6 +41,9 @@
         </FrameLayout>
         <LinearLayout android:id="@+id/camera_controls" android:layout_width="match_parent" android:layout_height="wrap_content"
             android:orientation="vertical" android:padding="12dp" android:background="#F2111713">
+            <TextView android:id="@+id/camera_mode" android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:gravity="center" android:text="@string/fixed_pace" android:textColor="#B6C1B5"
+                android:layout_marginBottom="8dp" android:textAppearance="?attr/textAppearanceLabelMedium" />
             <TextView android:id="@+id/camera_status" android:layout_width="match_parent" android:layout_height="wrap_content"
                 android:gravity="center" android:text="@string/camera_loading" android:accessibilityLiveRegion="polite"
                 android:textColor="@color/near_reader_text" android:textAppearance="?attr/textAppearanceLabelLarge" />

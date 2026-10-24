@@ -1,6 +1,6 @@
 # Verification
 
-The original 1.0 checks below were completed on 17 October 2026. The 1.1 update record follows them.
+The original 1.0 checks below were completed on 17 October 2026. Historical 1.1 and current 1.2 records follow them; older feature and permission statements describe their respective versions.
 
 ## Build and package
 
@@ -92,3 +92,43 @@ The camera and audio input are simulated; an audio track does not verify real mi
 ### Independent UI verdict
 
 The fresh Impeccable reviewer requested two changes: readable system navigation against the camera screen and an updated design record. After the correction batch, the same reviewer scored both **resolved** and returned **ship** for those scored fixes. Idle, settings, recording, playback, and landscape captures show dark navigation symbols on a protected light edge, measured by the reviewer at approximately 8.80:1. The camera content stays dark; its navigation edge follows the system day/night theme. This verdict covers the two fixes, not a new full-surface or physical-device certification.
+
+## Version 1.2 — 24 October 2026
+
+### Build and offline device checks
+
+- Debug application, instrumentation APK, and signed release assembled successfully with Java 17 / Gradle 8.13 / AGP 8.13.0, compile/target SDK 36.
+- **26 release JVM tests passed**: six scrolling checks, five shared-text cases, four numeric release-version cases, and eleven speech-to-script matching cases. The matcher checks silence/noise, forward progress, nearby repetition, manual seeking, punctuation, duplicates, and guards against short common phrases causing large jumps.
+- Release Lint: **0 errors, 17 warnings**. Remaining warnings include dependency updates, layout/overdraw, touch accessibility conventions, and string/RTL conventions. This is not full TalkBack verification.
+- Seven new Android instrumentation cases passed against the final debug APK (`OK (7 tests)`, 22.03 seconds). Airplane mode was enabled, with Wi-Fi and cellular data disabled. The eight existing editor/overlay/camera/share cases also passed on the 1.2 implementation (`OK (8 tests)`, 126.783 seconds), before the final UI corrections and matcher guard.
+- The bundled Vosk model decoded a real 16 kHz mono English WAV fixture offline, and its recognized words advanced the matcher. This exercises actual native recognition, not a mocked transcript. It does not measure live accent/noise accuracy.
+- The voice/camera case observed two active input clients owned by Near with neither marked silenced. Pausing the script left the CameraX microphone client active, and the saved output contained positive-duration video/audio tracks. The emulator host audio is disabled; an audio track does not prove real microphone samples or sound quality.
+- Model preparation, voice recovery, and update failure handling are covered by native flows. Existing tests check camera finalization, shared-text persistence and rejection, editor persistence, and the floating reader.
+
+### Release boundary and update delivery
+
+The new cases reject draft/prerelease records, unexpected URLs, malformed version tags, and missing/incorrect APK assets without replacing a known valid cache. They check numeric ordering, opt-in notification delivery once per release, daily persisted job scheduling/cancellation, offline manual checks retaining a known update, and alert suppression while the camera is open. The new JobService requires the Android system's BIND_JOB_SERVICE permission; Updates remains a private activity. Only HTTPS public release metadata is requested. No APK installer permission was added.
+
+A separate manual emulator check enabled networking temporarily and successfully checked the real official GitHub endpoint. Installed 1.2 correctly reported current while the public stable release was still 1.1. Offline mode was restored afterward. This is ordinary release checking, not a security audit or an availability test.
+
+### Native UI evidence
+
+Final native captures in [docs/images/verification/v1.2](docs/images/verification/v1.2/) cover the editor; Updates in light, offline, dark/large-text, and available-update states; voice-follow ready/settings/recording; and landscape camera at system font scale 1.3. The available-update screenshot uses an explicitly labelled synthetic 99.0.0 cache fixture, restored after capture; no such release was published. Camera content is Android's synthetic green scene.
+
+The bounded root review corrected voice-switch label contrast, disabled fixed-pace controls in voice mode, and made the official Download action primary when an update exists. The final native screens were recaptured for independent Impeccable review.
+
+### Package and hardware limits
+
+The 1.2 APK contains the pinned offline English model and is 90,082,547 bytes (about 90 MB). The model adds installation and private-storage cost. The APK is non-debuggable and uses the same dedicated private release certificate as 1.0 and 1.1; APK Signature Scheme v2 verification passed. Certificate SHA-256: `a629ab31e4f5431c19bfb87447841245fbc634f717fc01e2bd343388cbd324ab`. APK SHA-256: `422e786ee919219ef0f0a3fe391a75da4970a7669549f3d818e49e041f0f9d69`.
+
+`zipalign -c -P 16 4` passed. arm64-v8a and x86_64 Vosk/JNA/CameraX ELF load segments were inspected for 16 KB alignment. This checks packaging, not physical-device runtime performance.
+
+A physical Pixel 7 Pro was not connected. Live recognition accuracy, names/numbers/accents, microphone sound, thermal behavior, long takes, other Android versions, and live notification timing under Android battery policies remain unverified. English voice-follow is available only inside Near's camera; fixed pace remains the fallback and the external-camera mode. Core operation stays offline; update checks need internet. Older installed versions need one manual 1.2 installation before future update notices can work.
+
+The signed public 1.1.0 APK was installed in a clean emulator test installation. A unique title and body were entered through the native editor, saved, and backgrounded. Installing the signed 1.2.0 APK with `adb install -r` succeeded; both fields survived and versionCode advanced from 2 to 3. Package flags confirmed the public release is non-debuggable. No physical phone data was changed.
+
+A separate smoke check of that signed 1.2 installation prepared the bundled model with networking disabled, enabled English voice-follow, recorded a short simulated take, paused script listening independently, stopped capture, and opened local Review last take. This was manual signed-release validation; instrumentation ran against the debug variant. It does not verify acoustic quality.
+
+### Independent UI verdict
+
+The fresh Impeccable reviewer opened all nine final captures and sampled native source. It requested one material fix: merge the 1.2 operating states, action hierarchy, and evidence into the incumbent DESIGN.md and design-system sidecar. A fresh documenter completed that scoped merge without replacing primitive tokens or the existing identity. The same reviewer then scored the sole persistence fix **resolved** and returned **ship** at that fix's scope. No additional native UI corrections were requested; this is not physical-device certification.

@@ -127,6 +127,8 @@ components:
 
 **Creative North Star: "Native Android workbench"**
 
+**Recorded version:** 1.2 · 24 October 2026. Incumbent native extension in Operate mode.
+
 Near is a quiet, practical place to prepare words, read them close to the lens, and record a take. Warm surfaces, forest green actions, system typography, and familiar Material 3 controls give editing and setup a clear hierarchy. The script and camera framing are the main content; the interface stays compact and direct.
 
 The signature is a movable dark reader with large warm-white text. In floating mode it has a steady first-line focus band and bottom fade; in Near's camera it becomes a translucent rounded panel so framing remains visible through the words. Script playback stays separate from recording. This is a code-led native interface built with Java 17, Android views, and Material Components 1.13.0. There is no image composition or generated artwork behind the UI.
@@ -138,9 +140,11 @@ The signature is a movable dark reader with large warm-white text. In floating m
 - A movable dark reader, opaque over other apps and translucent over Near's live camera.
 - Persistent recording choices and plainly labeled, independent script controls.
 - Review of clean video and editable plain-text shares before local saving.
+- Camera-only offline English voice-follow, with fixed pace and manual recovery.
+- Optional public-release checks and update alerts within the same native settings grammar.
 - Native density, font scaling, insets, and frame-timed movement.
 
-This record describes the built app in `app/src/main`, checked against native emulator captures in `docs/images/verification` and `docs/images/verification/v1.1`. The original floating reader's finish disposition was **ship as a personal testing build**; its adjustment-spacing fix was resolved and recaptured in portrait and landscape at system font scale 1.3. The camera/share reviewer scored the navigation-contrast and documentation fixes resolved, returning **ship** for those two fixes. The physical Pixel 7 Pro was not connected; physical framing, microphone quality, Pixel Camera behavior, and a real-device recorded take remain unverified.
+This record describes the built app in `app/src/main`, checked against native emulator captures in `docs/images/verification`, `docs/images/verification/v1.1`, and `docs/images/verification/v1.2`. The original floating reader's finish disposition was **ship as a personal testing build**; its adjustment-spacing fix was resolved and recaptured in portrait and landscape at system font scale 1.3. The camera/share reviewer scored the navigation-contrast and documentation fixes resolved, returning **ship** for those two fixes. The 1.2 finish review accepted the supplied nine captures and sampled native implementation; its sole material fix was persistence of this extension in the existing design records. The physical Pixel 7 Pro was not connected; physical framing, live recognition and microphone quality, Pixel Camera behavior, performance, and a real-device recorded take remain unverified.
 
 ## Colors
 
@@ -182,16 +186,16 @@ System type keeps the utility familiar and responds to Android font scaling. Mat
 
 | Role | Native source | Use |
 | --- | --- | --- |
-| Headline | Material 3 `HeadlineSmall` | “Your words, closer to the lens.” |
+| Headline | Material 3 `HeadlineSmall` | “Your words, closer to the lens.” and “Keep Near up to date.” |
 | Title | Material 3 `TitleMedium` | Script, preview, text size, pace, and width sections. |
-| Body | Native outlined text field and Material body roles | Script title and ordinary UI copy. |
+| Body | Native outlined text field and Material body roles | Script title and ordinary UI copy; Updates uses `BodyLarge` status and `BodyMedium` release notes. |
 | Script editor | Explicit 17 sp with 4 dp extra line spacing | Multiline script input. |
 | Label | Material 3 `LabelLarge` | Setting values. |
 | Supporting copy | Material 3 `BodySmall` | Saved-local statement, word count, and hints. |
 | Reader | Default 26 sp, adjustable 18–42 sp | Script preview, floating script text, and camera reader. |
 | Reader chrome | Explicit 12 sp | Status, text-size label, and pace label. |
 | Camera title and Record | Material 3 `TitleMedium` | Camera toolbar title and primary recording action. |
-| Camera handle and status | Material 3 `LabelMedium` / `LabelLarge` | Drag instruction and recording feedback. |
+| Camera handle and status | Material 3 `LabelMedium` / `LabelLarge` | Drag instruction, separate fixed-pace / English voice mode label, and recording feedback. |
 | Reader sheet title | Material 3 `TitleLarge` | Camera reader-settings bottom sheet. |
 
 The YAML omits numeric values for inherited Material appearances because the app does not override them. Reader text is measured with Android scaled density. Its layout uses 1.1 line-spacing multiplier plus 5 dp extra spacing, with font padding excluded. The countdown numeral is a functional canvas graphic sized at 54 dp rather than an sp text role.
@@ -211,6 +215,10 @@ The floating window uses the safe screen width: narrow 62%, medium 80%, or wide 
 The overlay stacks a 48 dp header, the reader viewport, a playback row, and an optional adjustment panel. Its viewport is normally 152 dp; available-height calculation reduces it as far as 84 dp on a short display. Rotation pauses reading, recenters the window near the top, and recomputes width and text layout. Portrait and landscape share the same controls; tablets have no separate composition.
 
 The camera's first viewport contains a 56 dp toolbar with back, actual video quality, and camera-switch controls; the live preview; a near-top reader; and separate script and recording controls. CameraX preview uses `fitCenter`, preserving the framing with letterboxing when needed. The stage has 12 dp margins. Its reader is at most 220 dp tall, limited by available stage height, with a 48 dp drag handle. The controls have 12 dp padding, a status line, a 48 dp restart/play/settings row, and a 64 dp Record action beside a 48 dp last-take review button. Independent controls retain 8 dp gaps. Landscape places a 280 dp control column beside the weighted stage instead of below it. Rotation returns the reader to the top and recomputes its height.
+
+The camera keeps its reading-mode label separate from recording status. Its scrollable native settings sheet retains 24 dp horizontal gutters and adds a minimum 64 dp English voice-follow switch with wrapping recovery copy before the size, pace, and opacity sliders. The mode switch is unavailable during countdown, recording, or saving; fixed-pace controls disable while voice-follow is selected. The dark sheet, portrait camera, and 280 dp landscape control column keep essential actions readable at system font scale 1.3.
+
+Updates uses a native toolbar/back action and one weighted scrolling column with 24 dp gutters. Installed version and live-region status precede the actions; release notes and the optional-alert switch continue in the same uninterrupted workbench. Check and the conditional official-download action have 56 dp minimum heights. The alert switch is at least 64 dp high; its hint, permission recovery, and privacy copy wrap vertically. The editor's conditional update notice is a 48 dp minimum text action below saved-local status, inside the preparation scroll area, preserving the recording footer hierarchy.
 
 Share text review uses the editor's toolbar and 24 dp content gutters, a scrolling form with a 320 dp multiline field, and persistent Save as new script / Cancel actions with 56 dp / 48 dp minimum heights. The native text counter and error can grow below the field. Video review uses a toolbar, weighted native video player, and a 56 dp Share video action with 16 dp outer margins.
 
@@ -236,7 +244,7 @@ Custom reader geometry is explicit: the window has 18 dp corners, the central pl
 
 ### Workbench and local script fields
 
-The toolbar contains the Near title and an overflow menu for import, export, delete, and help. “Scripts” opens a native popup list with the current entry checked and a “New script” option. Scripts are library entries. The named, outlined title field precedes the generous outlined body field; word count and approximate duration sit below. The title is a single line capped at 80 characters; the body supports multiline text up to 100,000 characters. Local saving is debounced by 350 ms and flushed when leaving the activity.
+The toolbar contains the Near title and an overflow menu for import, export, delete, help, and Updates. “Scripts” opens a native popup list with the current entry checked and a “New script” option. Scripts are library entries. The named, outlined title field precedes the generous outlined body field; word count and approximate duration sit below. The title is a single line capped at 80 characters; the body supports multiline text up to 100,000 characters. Local saving is debounced by 350 ms and flushed when leaving the activity.
 
 Native Material inputs supply focused outlines, floating title labels, keyboard selection, and accessibility behavior. Empty-reader launch gives a snackbar and focuses the body. Delete requires a Material confirmation dialog. Import/export use Android document pickers and report failure through a snackbar.
 
@@ -254,7 +262,17 @@ Text-size and pace sliders show their current values beside the section title. E
 
 The live camera is the stage, with the script drawn in a separate UI layer. The rounded reader opens near the top and its labeled handle moves it vertically within the stage. Tapping the script toggles reading; swiping seeks and pauses it. Restart rewinds and pauses only the script. Play script / Pause script remains a separate action from Record / Stop recording. Pausing, seeking, or reaching the end of the script does not stop video capture. The reader and camera controls are excluded from the encoded video.
 
-The native reader-settings bottom sheet has text size (18–42 sp, steps of 1), reading pace (60–220 wpm, steps of 5), Background opacity, and Text opacity (each 0–100%, steps of 5). Defaults are 26 sp, 120 wpm, 55% panel opacity, and 100% text opacity. Reset appearance restores only the two opacity defaults. Opacity changes affect the camera reader; the external floating reader remains opaque. Size and pace are shared reading preferences.
+The native reader-settings bottom sheet has a persisted “Voice follow · English” switch before text size (18–42 sp, steps of 1), reading pace (60–220 wpm, steps of 5), Background opacity, and Text opacity (each 0–100%, steps of 5). Choose voice or fixed pace before a take; the switch is disabled during countdown, recording, and saving. The reading-pace slider is disabled in voice mode because that value applies only to fixed pace. Defaults are 26 sp, 120 wpm, 55% panel opacity, and 100% text opacity. Reset appearance restores only the two opacity defaults. Opacity changes affect the camera reader; the external floating reader remains opaque. Size and fixed pace are shared reading preferences.
+
+English voice-follow uses the bundled Vosk model entirely on the phone, only inside Near's camera. “Follow voice” permits rehearsal before recording; the actual recording-start event starts the selected script mode. “Pause script” stops recognition while camera capture continues. Pause and swipe to recover the reading position, Restart to rewind, or turn voice-follow off while idle to return to fixed pace. The external reader retains fixed pace and manual seeking and does not listen to the microphone.
+
+| Voice-follow state | Visible behavior and recovery |
+| --- | --- |
+| Preparing | “Preparing offline voice follow…” in the separate mode label; script play and Record wait for the local model. No download or online speech fallback is used. |
+| Ready / following | “Voice follow · English”; “Follow voice” starts listening after microphone permission is granted, and becomes Pause script while active. |
+| Paused / manual seek | Recognition stops; swiping pauses and reanchors matching at the selected script position. Restart rewinds and pauses. |
+| Model or microphone failure | “Voice follow paused. Check microphone access, or turn voice follow off to use fixed pace.” A model preparation failure returns to fixed pace; a listening failure pauses recognition. Check Android microphone access, retry listening, or use the fixed-pace path. |
+| Silent take / audio interruption | Choosing a silent take turns voice-follow off. A capture audio interruption pauses listening and gives an explicit audio warning; review the saved take before use. |
 
 The camera opens on the front lens when available. Camera switch and quality changes are unavailable during countdown, recording, or saving. The quality label shows the supported quality actually bound to the device, with fallback when the preferred 1080p or 720p option is unavailable. Last-take review is enabled only when a saved take exists and the camera is idle.
 
@@ -268,6 +286,20 @@ The camera opens on the front lens when available. Camera switch and quality cha
 | Saved / interrupted / failed | Text distinguishes a saved take, a playable interrupted take, absent expected audio, or failure to save. Unplayable output is discarded; a validated playable take becomes the last-take review target. |
 
 Stop recording pauses the script and finalizes video. Leaving an active take asks to Stop and leave or Cancel; navigation completes after saving. Backgrounding or rotating cancels countdown, pauses reading, and stops/finalizes any active take. Rotation reflows the stage and controls; it does not continue the same recording across the orientation change.
+
+### Updates and optional alerts
+
+Updates opens from the editor menu or conditional text notice. Before Updates has been visited, the notice says “Get update alerts”; a cached newer release changes it to “Near [version] is available.” The Updates screen shows the installed version (1.2.0 in the 1.2 captures) before release status. Checking uses public GitHub release metadata over HTTPS; scripts, speech, and recordings stay on the phone. Reading, camera recording, and English recognition work offline. An older installation needs one manual installation of the update-checking version before future notices are possible.
+
+| Release state | Status and action hierarchy |
+| --- | --- |
+| Not checked | Explain the public-release check and user-controlled download/installation; filled Check for updates is primary. |
+| Checking | “Checking GitHub…” in the polite live-region status; disable Check during the request. |
+| Installed / current | Installed version remains visible; current means current according to the last successful check. Check remains filled primary; no download action or notes appear without a newer valid stable release. |
+| Offline / failed | “Could not check right now. Try again when online. You can still read and record.” Re-enable Check and retain any known release cache. |
+| Newer release available | Show version and cached release notes. Filled “Open official download” is primary; outlined Check for updates sits beneath it. The browser opens the official GitHub release page; the user chooses download and Android installation. Near does not silently install an APK. |
+
+Update notifications are off by default. The native switch opts into a persisted daily Android `JobScheduler` job requiring a network and a battery that is not low; Android may defer it, so the cadence is approximate. Turning alerts off cancels the job. Manual checks remain available independently, and the editor refreshes public metadata when due. Android 13+ notification permission is requested when opting in; blocked app notifications expose recovery copy and Notification settings. Delivery also respects the disabled Updates channel; Android notification settings control permission/channel recovery. A valid newer version is notified once, with delivery deferred while Near's camera is visible or the external floating reader is running. Update prompts stay outside a take.
 
 ### Video review and incoming shared text
 
@@ -283,7 +315,7 @@ The playback row has restart, a flexible central play/pause control, and a show/
 
 ### Reader timing and states
 
-Movement follows `Choreographer` frame callbacks using monotonic timestamps. Distance is elapsed time times pixels per second, with a 100 ms maximum frame step to prevent large skips after stalls. Speed derives from laid-out text height, word count, and selected approximate wpm; it is not speech tracking. The text scrolls upward beneath a stationary first-line focus band in the external reader and editor preview; the camera reader omits the band. There are no decorative entrance or page-transition animations.
+Fixed-pace movement follows `Choreographer` frame callbacks using monotonic timestamps. Distance is elapsed time times pixels per second, with a 100 ms maximum frame step to prevent large skips after stalls. Speed derives from laid-out text height, word count, and selected approximate wpm. The text scrolls upward beneath a stationary first-line focus band in the external reader and editor preview; the camera reader omits the band. In camera-only voice mode, bounded speech-to-script matching sets the target character, and frame callbacks ease the reader toward its corresponding offset. Silence or unmatched noise does not start timed scrolling. Manual seeks reanchor the matcher. Pause stops listening and movement without stopping video. There are no decorative entrance or page-transition animations; update feedback uses native state changes and live-region text.
 
 | Visible status | Trigger and behavior |
 | --- | --- |
@@ -297,6 +329,22 @@ In external floating mode, screen off and rotation pause reading. Closing remove
 
 Evidence for the original floating surfaces is `phone-light.png`, `phone-settings.png`, `phone-dark-large-text.png`, `phone-dark-settings-large-text.png`, `phone-overlay-large-text.png`, `phone-overlay-controls-large-text.png`, and `phone-landscape-overlay.png` in `docs/images/verification/`. Camera/share evidence in `docs/images/verification/v1.1/` includes `camera-phone.png`, `camera-settings-phone.png`, `camera-recording-phone.png`, `camera-landscape-large.png`, `review-phone.png`, `share-phone.png`, `share-dark-large-phone.png`, and `editor-phone.png`. These are emulator Android renders; green blocks in the camera captures are the Android synthetic camera input. They establish native layout and states, not physical-camera image quality. The finish reviewer measured the corrected navigation contrast at approximately 8.80:1 and scored that fix resolved. The sidecar's HTML/CSS is an illustrative translation for its design panel, not app source or browser verification.
 
+The 1.2 evidence was captured on an Android 15 / API 35 x86_64 emulator with a Pixel 7 Pro display profile. Eight portrait captures are 1440 × 3120; the landscape capture is 3120 × 1440. Dark Updates and landscape camera use system font scale 1.3. Each supplied capture carries embedded provenance; the published copies match those reviewed. All nine were opened by the finish reviewer:
+
+| Published evidence path | State |
+| --- | --- |
+| `docs/images/verification/v1.2/v12-editor-phone.png` | Editor and persistent recording choices. |
+| `docs/images/verification/v1.2/v12-updates-phone.png` | Installed 1.2.0 / current release. |
+| `docs/images/verification/v1.2/v12-updates-offline-phone.png` | Offline failure and readable recovery. |
+| `docs/images/verification/v1.2/v12-updates-dark-large-phone.png` | Dark Updates at font scale 1.3. |
+| `docs/images/verification/v1.2/v12-updates-available-phone.png` | Available state with filled official Download, outlined Check, and notes explicitly labeling synthetic 99.0.0; no such public release was published. |
+| `docs/images/verification/v1.2/v12-voice-camera-phone.png` | Voice-ready camera. |
+| `docs/images/verification/v1.2/v12-voice-settings-phone.png` | English voice switch, disabled fixed-pace slider, and opacity settings. |
+| `docs/images/verification/v1.2/v12-voice-recording-phone.png` | Recording with independent script controls. |
+| `docs/images/verification/v1.2/v12-voice-landscape-large.png` | Landscape camera at font scale 1.3. |
+
+Camera blocks and framing bars are Android's synthetic camera scene. `VERIFICATION.md` reports 26 release JVM cases and 15 Android instrumentation cases (seven new cases against the final debug APK; eight existing cases before the final UI/matcher corrections), plus a real offline WAV decode and a signed-release emulator smoke check. These are reported software/emulator evidence, not tests rerun for this documentation pass or proof of live microphone accuracy. The physical Pixel 7 Pro, recognition of accents/names/numbers, real sound and framing, gestures, thermal behavior, long takes, refresh-rate performance, other Android versions, and notification timing under real battery policies remain unverified.
+
 ## Do's and Don'ts
 
 ### Do:
@@ -305,6 +353,9 @@ Evidence for the original floating surfaces is `phone-light.png`, `phone-setting
 - Do keep Record in Near primary and Open over camera secondary, outside the scrolling preparation content.
 - Do keep the floating reader dark with its first-line band stationary, and keep camera reader opacity independently adjustable.
 - Do keep script playback controls separate from Record / Stop recording and omit the reader from encoded video.
+- Do choose English voice-follow before a take, disable its fixed-pace slider, and preserve pause, seek, restart, and fixed-pace recovery.
+- Do make the official Download primary only for a newer release, retain Check, and keep update prompts outside camera and floating-reader use.
+- Do distinguish offline core functions from online public-release metadata and keep notification alerts opt-in.
 - Do review incoming plain text before creating a new script; show explicit blank, oversize, and URL-only states.
 - Do preserve 48 dp floating targets and 8 dp gaps between independent controls.
 - Do respect native insets, reflow text, and pause before recomputing rotated reader geometry.

@@ -53,6 +53,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public final class CameraActivity extends AppCompatActivity {
+    static volatile boolean visible;
     private static final int CAMERA_PERMISSION = 10, AUDIO_PERMISSION = 11;
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final ScrollSession session = new ScrollSession();
@@ -75,10 +76,23 @@ public final class CameraActivity extends AppCompatActivity {
     private File legacyFile;
     private BottomSheetDialog settingsSheet;
     private float dragY, panelY;
+    private OfflineVoice voice;
+    private ScriptMatcher matcher;
+    private boolean voiceMode, voicePlaying, audioInterrupted;
+    private float voiceTarget;
+    private long voiceFrame;
 
     private final Choreographer.FrameCallback frame = new Choreographer.FrameCallback() {
         @Override public void doFrame(long nanos) {
             framePosted = false;
+            if(voiceMode && voicePlaying) {
+                double elapsed=voiceFrame==0 ? 1.0/60 : Math.min(0.1,(nanos-voiceFrame)/1_000_000_000.0);
+                voiceFrame=nanos;
+                double distance=voiceTarget-session.position();
+                session.seek(session.position()+distance*Math.min(1,elapsed*12)); reader.setOffset((float)session.position());
+                if(Math.abs(distance)>0.5) scheduleFrame(); else voiceFrame=0;
+                return;
+            }
             if (session.playing()) {
                 session.tick(nanos); reader.setOffset((float)session.position());
                 if (session.playing()) scheduleFrame(); else updateControls();
@@ -101,6 +115,22 @@ public final class CameraActivity extends AppCompatActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         settings = new PrompterSettings(this);
         scriptText = new ScriptStore(this).current().body;
+        matcher=new ScriptMatcher(scriptText);
+        voiceMode=settings.voiceFollow();
+        voice=new OfflineVoice(this,new OfflineVoice.Listener() {
+            public void onReady() { if(!destroyed) updateControls(); }
+            public void onWords(String words) {
+                if(foreground && voiceMode && voicePlaying) {
+                    voiceTarget=reader.offsetForCharacter(matcher.accept(words)); scheduleFrame();
+                }
+            }
+            public void onError() {
+                if(destroyed) return;
+                pauseScript();
+                if(!voice.ready()) { voiceMode=false; settings.voiceFollow(false); }
+                status.setText(R.string.voice_unavailable); updateControls();
+            }
+        });
         hd = getPreferences(MODE_PRIVATE).getBoolean("hd", false);
         if (state != null) front = state.getBoolean("front", true);
         preview = findViewById(R.id.camera_preview);
@@ -117,6 +147,7 @@ public final class CameraActivity extends AppCompatActivity {
         flipButton.setOnClickListener(v -> { front = !front; bindCamera(); });
         addIcon(R.id.camera_restart_slot, IconButton.Icon.RESTART, "Restart script").setOnClickListener(v -> {
             pauseScript(); session.restart(); reader.setOffset(0); updateControls();
+            matcher.seekCharacter(0); voiceTarget=0;
         });
         addIcon(R.id.camera_settings_slot, IconButton.Icon.SETTINGS, getString(R.string.camera_reader_settings)).setOnClickListener(v -> showReaderSettings());
         reviewButton = addIcon(R.id.camera_review_slot, IconButton.Icon.VIDEO, getString(R.string.camera_review));
@@ -136,7 +167,7 @@ public final class CameraActivity extends AppCompatActivity {
             } else bindCamera();
         });
         reader.setListener(new ReaderView.Listener() {
-            public void onScrub(float delta) { pauseScript(); session.seek(session.position()+delta); reader.setOffset((float)session.position()); }
+            public void onScrub(float delta) { pauseScript(); session.seek(session.position()+delta); reader.setOffset((float)session.position()); matcher.seekCharacter(reader.characterForOffset((float)session.position())); voiceTarget=(float)session.position(); }
             public void onTap() { toggleScript(); }
             public void onLayoutReady() { configureSession(); }
         });
@@ -153,6 +184,7 @@ public final class CameraActivity extends AppCompatActivity {
             @Override public void handleOnBackPressed() { leave(); }
         });
         adaptLayout(); applyReader(); updateControls();
+        if(voiceMode) voice.prepare();
         if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) askForCamera();
     }
     private IconButton addIcon(int slot, IconButton.Icon icon, String label) {
@@ -219,6 +251,7 @@ public final class CameraActivity extends AppCompatActivity {
                     .setPositiveButton(R.string.open_settings,(d,w) -> startActivity(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
                             Uri.parse("package:"+getPackageName())))).show();
         }
+        if(requestCode==12 && checkSelfPermission(Manifest.permission.RECORD_AUDIO)==PackageManager.PERMISSION_GRANTED) startScript();
     }
     private void requestRecording() {
         if (checkSelfPermission(Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) beginCountdown(true);
@@ -227,6 +260,7 @@ public final class CameraActivity extends AppCompatActivity {
     private void beginCountdown(boolean withAudio) {
         if (!foreground || !ready || recording != null || saving || countdown > 0) return;
         audio = withAudio; pauseScript();
+        if(!withAudio && voiceMode) { voiceMode=false; settings.voiceFollow(false); updateControls(); }
         if (settings.countdown()) {
             countdown = 3; reader.setCountdown("3"); handler.postDelayed(countdownTick,1000); updateControls();
         } else startRecording();
@@ -237,6 +271,7 @@ public final class CameraActivity extends AppCompatActivity {
     private void startRecording() {
         if (!foreground || !ready || capture == null) return;
         try {
+            audioInterrupted=false;
             String filename = "Near_"+new SimpleDateFormat("yyyyMMdd_HHmmss_SSS",Locale.US).format(new Date())+".mp4";
             PendingRecording pending;
             legacyFile = null;
@@ -268,12 +303,16 @@ public final class CameraActivity extends AppCompatActivity {
             if (!foreground) { stopRecording(); return; }
             status.setAccessibilityLiveRegion(View.ACCESSIBILITY_LIVE_REGION_NONE);
             status.setText(audio ? R.string.camera_recording : R.string.camera_recording_silent);
-            if (session.finished()) { session.restart(); reader.setOffset(0); }
-            session.play(); scheduleFrame(); updateControls();
+            if (session.finished()) { session.restart(); reader.setOffset(0); matcher.seekCharacter(0); }
+            startScript(); updateControls();
         } else if (event instanceof VideoRecordEvent.Status) {
             if (!saving && !destroyed) {
                 long seconds = event.getRecordingStats().getRecordedDurationNanos()/1_000_000_000;
-                status.setText(getString(audio ? R.string.camera_recording : R.string.camera_recording_silent)
+                if(audio && event.getRecordingStats().getAudioStats().hasError()) {
+                    audioInterrupted=true;
+                    if(voicePlaying) pauseScript();
+                }
+                status.setText(getString(audioInterrupted ? R.string.recording_audio_interrupted : audio ? R.string.camera_recording : R.string.camera_recording_silent)
                         +String.format(Locale.getDefault()," · %02d:%02d",seconds/60,seconds%60));
             }
         } else if (event instanceof VideoRecordEvent.Finalize) {
@@ -283,6 +322,7 @@ public final class CameraActivity extends AppCompatActivity {
                     : FileProvider.getUriForFile(this,getPackageName()+".files",legacyFile);
             File file = legacyFile;
             boolean expectedAudio = audio;
+            boolean interruptedAudio=audioInterrupted;
             fileChecks.execute(() -> {
                 boolean playable = false, hasAudio = false;
                 MediaMetadataRetriever metadata = new MediaMetadataRetriever();
@@ -304,7 +344,7 @@ public final class CameraActivity extends AppCompatActivity {
                     if (!destroyed) {
                         status.setAccessibilityLiveRegion(View.ACCESSIBILITY_LIVE_REGION_POLITE);
                         status.setText(!valid ? R.string.camera_failed : expectedAudio && !sound ? R.string.camera_audio_failed
-                                : result.hasError() ? R.string.camera_partial : R.string.camera_saved);
+                                : interruptedAudio ? R.string.saved_audio_interrupted : result.hasError() ? R.string.camera_partial : R.string.camera_saved);
                         updateControls();
                         if (leaving) finish(); else if (foreground) bindCameraAfterSave();
                     } else fileChecks.shutdown();
@@ -333,11 +373,24 @@ public final class CameraActivity extends AppCompatActivity {
     private void scheduleFrame() {
         if (!framePosted && foreground) { framePosted = true; Choreographer.getInstance().postFrameCallback(frame); }
     }
-    private void pauseScript() { session.pause(); if (playButton != null) updateControls(); }
+    private void pauseScript() { session.pause(); voicePlaying=false; voiceFrame=0; if(voice!=null) voice.stop(); if (playButton != null) updateControls(); }
+    private void startScript() {
+        if(voiceMode) {
+            if(!voice.ready()) return;
+            if(checkSelfPermission(Manifest.permission.RECORD_AUDIO)!=PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO},12); return;
+            }
+            voicePlaying=true; voiceTarget=(float)session.position(); voiceFrame=0; voice.start();
+        } else { session.play(); scheduleFrame(); }
+        updateControls();
+    }
     private void toggleScript() {
         if (countdown > 0 || saving) return;
-        if (session.playing()) pauseScript();
-        else { if (session.finished()) { session.restart(); reader.setOffset(0); } session.play(); scheduleFrame(); }
+        if (session.playing() || voicePlaying) pauseScript();
+        else {
+            if (session.finished()) { session.restart(); reader.setOffset(0); matcher.seekCharacter(0); }
+            startScript();
+        }
         updateControls();
     }
     private void applyReader() {
@@ -347,6 +400,7 @@ public final class CameraActivity extends AppCompatActivity {
         background.setColor(Color.argb(Math.round(255*settings.panelOpacity()/100f),17,23,19)); background.setCornerRadius(dp(18));
         panel.setBackground(background); panel.setClipToOutline(true);
         configureSession(); session.seek(progress*reader.maxOffset()); reader.setOffset((float)session.position());
+        voiceTarget=reader.offsetForCharacter(matcher.character());
     }
     private void resizePanel() {
         if (stage.getHeight() <= 0) return;
@@ -367,13 +421,15 @@ public final class CameraActivity extends AppCompatActivity {
     private void updateControls() {
         if (recordButton == null) return;
         boolean busy = recording != null || saving || countdown > 0;
-        recordButton.setEnabled(ready && !saving);
+        boolean modelReady=!voiceMode || voice.ready();
+        recordButton.setEnabled(ready && !saving && modelReady);
         recordButton.setText(saving ? R.string.camera_saving : countdown > 0 ? R.string.camera_cancel
                 : recording != null ? R.string.camera_stop : R.string.camera_record);
         recordButton.setBackgroundTintList(ColorStateList.valueOf(recording != null ? 0xFFB3261E : getColor(R.color.near_accent)));
         recordButton.setTextColor(recording != null ? Color.WHITE : 0xFF07381F);
-        playButton.setEnabled(countdown == 0 && !saving);
-        playButton.setText(session.playing() ? R.string.camera_pause : R.string.camera_play);
+        playButton.setEnabled(countdown == 0 && !saving && modelReady);
+        playButton.setText(session.playing() || voicePlaying ? R.string.camera_pause : voiceMode ? R.string.follow_voice : R.string.camera_play);
+        ((TextView)findViewById(R.id.camera_mode)).setText(voiceMode ? voice.ready() ? R.string.voice_english : R.string.voice_preparing : R.string.fixed_pace);
         qualityButton.setEnabled(!busy && ready && canSelectQuality);
         flipButton.setEnabled(!busy && ready && canFlip);
         reviewButton.setEnabled(!busy && getSharedPreferences("recordings",MODE_PRIVATE).contains("last"));
@@ -386,8 +442,23 @@ public final class CameraActivity extends AppCompatActivity {
         LinearLayout content = new LinearLayout(this); content.setOrientation(LinearLayout.VERTICAL); content.setPadding(dp(24),dp(12),dp(24),dp(24));
         TextView heading = new TextView(this); heading.setText(R.string.camera_reader_settings); heading.setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleLarge);
         content.addView(heading);
+        com.google.android.material.materialswitch.MaterialSwitch follow=new com.google.android.material.materialswitch.MaterialSwitch(this);
+        follow.setId(R.id.voice_follow_switch); follow.setText(R.string.voice_english); follow.setChecked(voiceMode);
+        follow.setTextColor(getColor(R.color.near_reader_text));
+        follow.setEnabled(recording==null && !saving && countdown==0);
+        LinearLayout.LayoutParams modeParams=new LinearLayout.LayoutParams(-1,-2); modeParams.topMargin=dp(16);
+        follow.setMinHeight(dp(64)); content.addView(follow,modeParams);
+        TextView hint=new TextView(this); hint.setText(R.string.voice_hint); hint.setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall);
+        content.addView(hint,new LinearLayout.LayoutParams(-1,-2));
         addSlider(content,R.string.text_size,18,42,1,settings.textSize(),v -> { settings.textSize(v); applyReader(); });
-        addSlider(content,R.string.speed,60,220,5,settings.pace(),v -> { settings.pace(v); configureSession(); });
+        Slider paceSlider=addSlider(content,R.string.speed,60,220,5,settings.pace(),v -> { settings.pace(v); configureSession(); });
+        paceSlider.setEnabled(!voiceMode);
+        follow.setOnCheckedChangeListener((button,checked) -> {
+            pauseScript(); voiceMode=checked; settings.voiceFollow(checked); paceSlider.setEnabled(!checked);
+            matcher.seekCharacter(reader.characterForOffset((float)session.position()));
+            if(checked) voice.prepare();
+            updateControls();
+        });
         addSlider(content,R.string.panel_opacity,0,100,5,settings.panelOpacity(),v -> { settings.panelOpacity(v); applyReader(); });
         addSlider(content,R.string.letters_opacity,0,100,5,settings.textOpacity(),v -> { settings.textOpacity(v); applyReader(); });
         MaterialButton reset = new MaterialButton(this); reset.setText(R.string.reset_appearance);
@@ -397,21 +468,22 @@ public final class CameraActivity extends AppCompatActivity {
         ScreenInsets.protectNavigation(settingsSheet.getWindow(),settingsSheet.getWindow().getDecorView());
     }
     private interface SettingChange { void change(int value); }
-    private void addSlider(LinearLayout content,int label,int min,int max,int step,int value,SettingChange change) {
+    private Slider addSlider(LinearLayout content,int label,int min,int max,int step,int value,SettingChange change) {
         TextView text = new TextView(this); text.setText(getString(label)+"  "+value); text.setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_LabelLarge);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(-1,-2); lp.topMargin=dp(16); content.addView(text,lp);
         Slider slider = new Slider(this); slider.setContentDescription(getString(label)); slider.setValueFrom(min); slider.setValueTo(max); slider.setStepSize(step); slider.setValue(value);
         content.addView(slider,new LinearLayout.LayoutParams(-1,dp(48)));
         slider.addOnChangeListener((s,v,user) -> { int number = Math.round(v); text.setText(getString(label)+"  "+number); change.change(number); });
+        return slider;
     }
     private int dp(int value) { return Math.round(value*getResources().getDisplayMetrics().density); }
     @Override protected void onStart() {
-        super.onStart(); foreground = true;
+        super.onStart(); foreground = true; visible=true;
         // A cached provider can resolve before the preview has attached to a display.
         preview.post(() -> { if (foreground && !destroyed && checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) loadProvider(); });
     }
     @Override protected void onStop() {
-        foreground = false; cancelCountdown(); stopRecording(); pauseScript();
+        foreground = false; visible=false; cancelCountdown(); stopRecording(); pauseScript();
         super.onStop();
     }
     @Override protected void onSaveInstanceState(Bundle state) { super.onSaveInstanceState(state); state.putBoolean("front",front); }
@@ -425,6 +497,7 @@ public final class CameraActivity extends AppCompatActivity {
     }
     @Override protected void onDestroy() {
         destroyed = true; handler.removeCallbacks(countdownTick); Choreographer.getInstance().removeFrameCallback(frame);
+        voice.close();
         if (settingsSheet != null) settingsSheet.dismiss();
         if (recording == null && !saving) fileChecks.shutdown();
         super.onDestroy();

@@ -21,8 +21,8 @@ android {
         applicationId 'com.mastermoh.near'
         minSdk 26
         targetSdk 36
-        versionCode 2
-        versionName '1.1.0'
+        versionCode 3
+        versionName '1.2.0'
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
     compileOptions {
@@ -68,8 +68,43 @@ dependencies {
     implementation 'androidx.camera:camera-lifecycle:1.6.2'
     implementation 'androidx.camera:camera-view:1.6.2'
     implementation 'androidx.camera:camera-video:1.6.2'
+    implementation 'com.alphacephei:vosk-android:0.3.75@aar'
+    implementation 'net.java.dev.jna:jna:5.18.1@aar'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test:runner:1.6.2'
     androidTestImplementation 'androidx.test:rules:1.6.1'
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'
 }
+
+// Pin the bundled offline model; source builds download it once, never at app runtime.
+def voiceAssets = layout.buildDirectory.dir('generated/voice-assets')
+android.sourceSets.main.assets.srcDir(voiceAssets)
+def prepareVoiceModel = tasks.register('prepareVoiceModel') {
+    def modelSha = '30f26242c4eb449f948e42cb302dd7a686cb29a3423a8367f99ff41780942498'
+    inputs.property('modelSha256', modelSha)
+    outputs.dir(voiceAssets)
+    doLast {
+        def archive = project.hasProperty('nearVoiceModelZip') ? file(project.property('nearVoiceModelZip')) : layout.buildDirectory.file('voice-model.zip').get().asFile
+        if (!archive.exists()) {
+            archive.parentFile.mkdirs()
+            def connection = new URL('https://alphacephei.com/vosk/models/vosk-model-small-en-us-0.15.zip').openConnection()
+            connection.connectTimeout = 15000
+            connection.readTimeout = 60000
+            connection.inputStream.withCloseable { input -> archive.withOutputStream { it << input } }
+        }
+        def digest = java.security.MessageDigest.getInstance('SHA-256')
+        archive.withInputStream { input ->
+            byte[] buffer = new byte[65536]
+            int count
+            while ((count = input.read(buffer)) != -1) digest.update(buffer, 0, count)
+        }
+        if (digest.digest().encodeHex().toString() != modelSha) throw new GradleException('Offline voice model checksum mismatch; remove the cached voice-model.zip and retry.')
+        copy {
+            from(zipTree(archive))
+            into(voiceAssets)
+            eachFile { it.path = it.path.replaceFirst('vosk-model-small-en-us-0.15', 'model-en-us') }
+            includeEmptyDirs = false
+        }
+    }
+}
+tasks.named('preBuild').configure { dependsOn prepareVoiceModel }

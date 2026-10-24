@@ -100,17 +100,20 @@ public final class MainActivity extends AppCompatActivity {
         menu.add(0, 2, 1, R.string.export_script);
         menu.add(0, 3, 2, R.string.delete_script);
         menu.add(0, 4, 3, R.string.help);
+        menu.add(0, 5, 4, R.string.updates_title);
         toolbar.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
                 case 1: importScript(); break;
                 case 2: exportScript(); break;
                 case 3: deleteScript(); break;
                 case 4: new MaterialAlertDialogBuilder(this).setTitle(R.string.help).setMessage(R.string.help_body).setPositiveButton(android.R.string.ok, null).show(); break;
+                case 5: startActivity(new Intent(this,UpdatesActivity.class)); break;
                 default: return false;
             }
             return true;
         });
         findViewById(R.id.library).setOnClickListener(this::showLibrary);
+        findViewById(R.id.updates_banner).setOnClickListener(v -> startActivity(new Intent(this,UpdatesActivity.class)));
         findViewById(R.id.launch).setOnClickListener(view -> launchReader());
         findViewById(R.id.record_in_near).setOnClickListener(view -> {
             handler.removeCallbacks(refreshDraft); store.save();
@@ -318,7 +321,24 @@ public final class MainActivity extends AppCompatActivity {
             ((Slider) findViewById(R.id.pace)).setValue(settings.pace());
             loading = false;
             updateReaderState();
+            refreshUpdates();
         }
+    }
+    private void refreshUpdates() {
+        String version=UpdateChecker.available(this);
+        com.google.android.material.button.MaterialButton banner=findViewById(R.id.updates_banner);
+        banner.setVisibility(!version.isEmpty() || !UpdateChecker.prefs(this).getBoolean("introSeen",false) ? View.VISIBLE : View.GONE);
+        banner.setText(version.isEmpty() ? getString(R.string.get_update_alerts) : getString(R.string.update_available,version));
+        UpdateChecker.schedule(this); UpdateChecker.notifyIfAvailable(this);
+        if(UpdateChecker.due(this)) UpdateChecker.NETWORK.execute(() -> {
+            try { UpdateChecker.check(getApplicationContext(),false); }
+            catch(java.io.IOException unavailable) { return; }
+            runOnUiThread(() -> { if(!isDestroyed() && getLifecycle().getCurrentState().isAtLeast(androidx.lifecycle.Lifecycle.State.RESUMED)) {
+                String found=UpdateChecker.available(this);
+                if(!found.isEmpty()) { banner.setText(getString(R.string.update_available,found)); banner.setVisibility(View.VISIBLE); }
+                UpdateChecker.notifyIfAvailable(this);
+            }});
+        });
     }
     @Override protected void onPause() { super.onPause(); handler.removeCallbacks(refreshDraft); if (store != null) store.save(); }
     @Override protected void onStop() { if (receiverRegistered) { unregisterReceiver(readerStatus); receiverRegistered = false; } super.onStop(); }

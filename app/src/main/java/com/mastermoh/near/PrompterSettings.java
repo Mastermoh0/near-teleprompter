@@ -10,6 +10,8 @@ final class PrompterSettings {
     int pace() { return Math.max(60, Math.min(220, prefs.getInt("pace", 120))); }
     int width() { return Math.max(0, Math.min(2, prefs.getInt("width", 1))); }
     boolean countdown() { return prefs.getBoolean("countdown", true); }
+    boolean voiceFollow() { return prefs.getBoolean("voiceFollow",false); }
+    void voiceFollow(boolean value) { prefs.edit().putBoolean("voiceFollow",value).apply(); }
     int panelOpacity() { return Math.max(0, Math.min(100, prefs.getInt("cameraPanelOpacity", 55))); }
     int textOpacity() { return Math.max(0, Math.min(100, prefs.getInt("cameraTextOpacity", 100))); }
     void panelOpacity(int value) { prefs.edit().putInt("cameraPanelOpacity", value).apply(); }

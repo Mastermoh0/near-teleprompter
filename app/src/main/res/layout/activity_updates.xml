@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- THESIS: Know which Near is installed and choose when to update.
+     OWN-WORLD: Existing forest Material workbench, native outlined and filled controls.
+     STORY: Check release status, read changes, open official download, manage alerts.
+     FIRST VIEWPORT: Current version, clear status, Check action, optional update details, alerts.
+     FORM: Local extension of Near's established native settings grammar. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/updates_root"
+    android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:background="?attr/colorSurface">
+    <com.google.android.material.appbar.MaterialToolbar android:id="@+id/updates_toolbar"
+        android:layout_width="match_parent" android:layout_height="?attr/actionBarSize" app:title="@string/updates_title" />
+    <ScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:fillViewport="true">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="24dp">
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/updates_heading" android:textAppearance="?attr/textAppearanceHeadlineSmall" />
+            <TextView android:id="@+id/installed_version" style="@style/Near.Caption" android:layout_marginTop="8dp" />
+            <TextView android:id="@+id/update_status" android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_marginTop="24dp" android:textAppearance="?attr/textAppearanceBodyLarge" android:accessibilityLiveRegion="polite" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/download_update"
+                android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="56dp" android:layout_marginTop="8dp"
+                android:text="@string/open_download" android:visibility="gone" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/check_updates" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:minHeight="56dp" android:layout_marginTop="16dp" android:text="@string/check_updates" />
+            <TextView android:id="@+id/update_notes" android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_marginTop="16dp" android:textAppearance="?attr/textAppearanceBodyMedium" android:visibility="gone" />
+            <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/update_alerts" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:minHeight="64dp" android:layout_marginTop="24dp" android:text="@string/update_alerts" />
+            <TextView style="@style/Near.Caption" android:layout_marginTop="8dp" android:text="@string/update_alerts_hint" />
+            <TextView android:id="@+id/update_permission_hint" style="@style/Near.Caption" android:layout_marginTop="12dp" android:visibility="gone" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/update_notification_settings" style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="wrap_content" android:layout_height="wrap_content" android:minHeight="48dp" android:layout_marginTop="8dp"
+                android:text="@string/notification_settings" android:visibility="gone" />
+            <TextView style="@style/Near.Caption" android:layout_marginTop="24dp" android:text="@string/update_privacy" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
